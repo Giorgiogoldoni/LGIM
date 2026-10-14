@@ -1,0 +1,446 @@
+{
+ "versione": "1.0",
+ "aggiornato": "2026-10-13",
+ "portafoglio": "LGIM",
+ "parametri": {
+  "satellite": {
+   "target": 25,
+   "min": 20,
+   "max": 30
+  },
+  "core_target": 75,
+  "posizioni": {
+   "core": {
+    "min": 5,
+    "max": 7,
+    "entra_entro": 5,
+    "esce_oltre": 7
+   },
+   "satellite": {
+    "min": 2,
+    "max": 3,
+    "entra_entro": 2,
+    "esce_oltre": 3
+   }
+  },
+  "max_per_area_core": 2,
+  "max_per_famiglia_satellite": 2,
+  "tetto_peso": 50,
+  "soglia_ribilanciamento": 5,
+  "permanenza_minima_settimane": 4,
+  "stress_quota_peso": 50,
+  "costo_per_lato_pct": 0.15,
+  "paracadute": "XEON.MI",
+  "benchmark": [
+   "IWMO.MI",
+   "VNGA80.MI"
+  ],
+  "voti": {
+   "indicatori": [
+    "RSI(14)",
+    "STOCH(9,6)",
+    "STOCHRSI(14)",
+    "MACD(12,26,9)",
+    "ADX(14)",
+    "CCI(14)",
+    "ROC(12)",
+    "Ultimate Oscillator",
+    "Bull/Bear Power(13)"
+   ],
+   "medie_giornaliero_settimanale": [
+    5,
+    10,
+    20,
+    50
+   ],
+   "medie_mensile": [
+    5,
+    10,
+    20
+   ]
+  }
+ },
+ "universo": [
+  {
+   "ticker": "LGUS.MI",
+   "isin": "IE00BFXR5Q31",
+   "nome": "L&G US EQUITY UCITS ETF",
+   "parte": "core",
+   "area": "USA",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "RIUS.MI",
+   "isin": "IE00BKLWY790",
+   "nome": "L&G US ESG Paris Aligned UCITS ETF",
+   "parte": "core",
+   "area": "USA",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "SP1.MI",
+   "isin": "IE000MU0FDZ8",
+   "nome": "L&G S&P 100 UCITS ETF",
+   "parte": "core",
+   "area": "USA",
+   "acc_fonte": "KID Borsa Italiana",
+   "attivo": true
+  },
+  {
+   "ticker": "SP1E.MI",
+   "isin": "IE000YELA4E3",
+   "nome": "L&G S&P 100 Equal Weight UCITS ETF USD Acc",
+   "parte": "core",
+   "area": "USA",
+   "acc_fonte": "nome del fondo (USD Acc)",
+   "attivo": true
+  },
+  {
+   "ticker": "RTWO.MI",
+   "isin": "IE00B3CNHJ55",
+   "nome": "L&G Russell 2000 US Small Cap Quality UCITS ETF",
+   "parte": "core",
+   "area": "USA",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "LGGL.MI",
+   "isin": "IE00BFXR5S54",
+   "nome": "L&G GLOBAL EQUITY UCITS ETF",
+   "parte": "core",
+   "area": "Globale",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "LABL.MI",
+   "isin": "IE0007HKA9K1",
+   "nome": "L&G Global Brands UCITS ETF",
+   "parte": "core",
+   "area": "Globale",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "GERD.MI",
+   "isin": "IE0001UQQ933",
+   "nome": "L&G Gerd Kommer Multifactor Equity UCITS ETF",
+   "parte": "core",
+   "area": "Globale",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "GEDI.MI",
+   "isin": "IE000GUIUCJ1",
+   "nome": "L&G WTW Global Equity Diversified UCITS ETF USD Acc",
+   "parte": "core",
+   "area": "Globale",
+   "acc_fonte": "nome del fondo (USD Acc)",
+   "attivo": true,
+   "fondo": "WTW Global Equity Diversified"
+  },
+  {
+   "ticker": "LGEU.MI",
+   "isin": "IE00BFXR5V83",
+   "nome": "L&G EUROPE EX UK UCITS ETF",
+   "parte": "core",
+   "area": "Europa",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "RIEU.MI",
+   "isin": "IE00BKLTRN76",
+   "nome": "L&G MSCI Europe Climate Pathway UCITS ETF",
+   "parte": "core",
+   "area": "Europa",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "XML4.DE",
+   "isin": "IE00BFXR5R48",
+   "nome": "L&G UK Equity UCITS ETF",
+   "parte": "core",
+   "area": "Regno Unito",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "LGJP.MI",
+   "isin": "IE00BFXR5T61",
+   "nome": "L&G JAPAN EQUITY UCITS ETF",
+   "parte": "core",
+   "area": "Giappone",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "LGAP.MI",
+   "isin": "IE00BFXR5W90",
+   "nome": "L&G ASIA PACIFIC EX JAPAN UCITS ETF",
+   "parte": "core",
+   "area": "Asia-Pacifico ex Giappone",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "RIEM.MI",
+   "isin": "IE000CBYU7J5",
+   "nome": "L&G Emerging Markets Equity UCITS ETF",
+   "parte": "core",
+   "area": "Mercati emergenti",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "AIAI.MI",
+   "isin": "IE00BK5BCD43",
+   "nome": "L&G ARTIFICIAL INTELLIGENCE UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Tecnologia",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "ROBO.MI",
+   "isin": "IE00BMW3QX54",
+   "nome": "L&G GLOBAL ROBO AND AUTO UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Tecnologia",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "MTVS.MI",
+   "isin": "IE0004U3TX15",
+   "nome": "L&G Metaverse UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Tecnologia",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "ISPY.MI",
+   "isin": "IE00BYPLS672",
+   "nome": "L&G CYBER SECURITY UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Tecnologia",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "ESPY.MI",
+   "isin": "IE000ST40PX8",
+   "nome": "L&G Cyber Security Innovation UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Tecnologia",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "DPAY.MI",
+   "isin": "IE00BF92J153",
+   "nome": "L&G DIGITAL PAYMENTS UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Tecnologia",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "ECOM.MI",
+   "isin": "IE00BF0M6N54",
+   "nome": "L&G ECOMMERCE LOGISTICS UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Tecnologia",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "BIOT.MI",
+   "isin": "IE00BF0H7608",
+   "nome": "L&G PHARMA BREAKTHROUGH UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Salute",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "DOCT.MI",
+   "isin": "IE00BK5BC677",
+   "nome": "L&G Healthcare Technology & Innovation UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Salute",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "BATT.MI",
+   "isin": "IE00BF0M2Z96",
+   "nome": "L&G BATTERY VALUE-CHAIN UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Energia e ambiente",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "RENW.MI",
+   "isin": "IE00BK5BCH80",
+   "nome": "L&G CLEAN ENERGY UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Energia e ambiente",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "HTWO.MI",
+   "isin": "IE00BMYDM794",
+   "nome": "L&G HYDROGEN ECONOMY UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Energia e ambiente",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  },
+  {
+   "ticker": "GLUG.MI",
+   "isin": "IE00BK5BC891",
+   "nome": "L&G CLEAN WATER UCITS ETF",
+   "parte": "satellite",
+   "famiglia": "Energia e ambiente",
+   "acc_fonte": "Report to Investors LGIM 2024",
+   "attivo": true
+  }
+ ],
+ "esclusi": [
+  {
+   "ticker": "LDEU.MI",
+   "isin": "IE00BMYDM919",
+   "nome": "L&G Europe ex-UK Quality Dividends Equal Weight UCITS ETF",
+   "motivo": "Distribuzione (Quality Dividends Europa ex UK)"
+  },
+  {
+   "ticker": "LDAP.MI",
+   "isin": "IE00BMYDMB35",
+   "nome": "L&G APAC ex-Japan Quality Dividends Equal Weight UCITS ETF",
+   "motivo": "Distribuzione (Quality Dividends Asia-Pacifico ex Giappone)"
+  },
+  {
+   "ticker": "BAT3.DE",
+   "isin": "IE00BMYDM802",
+   "nome": "L&G Quality Equity Dividends ESG Exclusions UK UCITS ETF",
+   "motivo": "Distribuzione (Quality Dividends UK)"
+  },
+  {
+   "ticker": "LDGL.MI",
+   "isin": "IE0005AJA0P1",
+   "nome": "L&G Global Quality Dividends UCITS ETF",
+   "motivo": "Accumulazione non verificata"
+  },
+  {
+   "ticker": "LDGA.MI",
+   "isin": "IE000MRIQ479",
+   "nome": "L&G Global Quality Dividends UCITS ETF",
+   "motivo": "Accumulazione non verificata"
+  },
+  {
+   "ticker": "MIDS.MI",
+   "isin": "IE000DPO6LM8",
+   "nome": "L&G MSCI World Mid Cap UCITS ETF",
+   "motivo": "Accumulazione non verificata e storia insufficiente"
+  },
+  {
+   "ticker": "GEDE.MI",
+   "isin": "IE000JMMZAP4",
+   "nome": "L&G WTW Global Equity Diversified UCITS ETF EUR H Acc",
+   "motivo": "Stessa strategia di GEDI (classe coperta in EUR): una sola classe per fondo"
+  },
+  {
+   "ticker": "ECEH.MI",
+   "isin": "IE00022GJEG1",
+   "nome": "L&G Multi-Strat Enha Commod UCITS ETF H",
+   "motivo": "Materie prime, non azionario"
+  },
+  {
+   "ticker": "XAGZ.MI",
+   "isin": "IE000MQ5XEW1",
+   "nome": "L&G Multi-Strat Commod exAgri UCITS ETF",
+   "motivo": "Materie prime, non azionario"
+  },
+  {
+   "ticker": "COMF.MI",
+   "isin": "IE00B4WPHX27",
+   "nome": "L&G LONGER DATED ALL COMM UCITS ETF",
+   "motivo": "Materie prime, non azionario"
+  },
+  {
+   "ticker": "ENCO.MI",
+   "isin": "IE00BFXR6159",
+   "nome": "L&G MULTI-STRATEGY ENHA COMMOD UCITS ETF",
+   "motivo": "Materie prime, non azionario"
+  },
+  {
+   "ticker": "ENTR.MI",
+   "isin": "IE000BLN64M9",
+   "nome": "L&G New Energy Commodities UCITS ETF",
+   "motivo": "Materie prime, non azionario"
+  },
+  {
+   "ticker": "COMN.MI",
+   "isin": "IE000IIHLZL0",
+   "nome": "L&G Market Neutral Commodities UCITS ETF",
+   "motivo": "Materie prime, non azionario"
+  },
+  {
+   "ticker": "AUCO.MI",
+   "isin": "IE00B3CNHG25",
+   "nome": "L&G GOLD MINING UCITS ETF UCITS ETF",
+   "motivo": "Classificato come materie prime (minatori d'oro): da decidere"
+  }
+ ],
+ "testo": [
+  [
+   "Scopo e avvertenze",
+   "Portafoglio modello azionario con ETF L&G (LGIM), costruito con regole meccaniche sui segnali tecnici di investing. Non è una raccomandazione personalizzata. Le regole non sono state validate da un backtest e il consenso degli indicatori non è dimostrato predittivo: i risultati passati del modello non indicano quelli futuri."
+  ],
+  [
+   "Universo",
+   "ETF azionari L&G quotati su Borsa Italiana e Xetra, solo classi ad accumulazione verificate dall'ISIN, una sola classe per fondo. Esclusi materie prime, ETF a distribuzione e ETF con dati insufficienti. Parte core: {n_core} ETF diffusi su {n_aree} aree (massimo {max_area} per area). Parte satellite: {n_sat} ETF tematici, ciascuno area a sé, massimo {max_fam} per famiglia (tecnologia, salute, energia e ambiente)."
+  ],
+  [
+   "Segnali",
+   "Per ogni orizzonte (giornaliero, settimanale, mensile) il saldo è (voti Compra meno voti Vendi) diviso i voti, con un set fisso: 9 indicatori (RSI, STOCH, STOCHRSI, MACD, ADX, CCI, ROC, Ultimate Oscillator, Bull/Bear Power) e le medie mobili semplici ed esponenziali a 5, 10, 20, 50 periodi ({n_voti_gs} voti) per giornaliero e settimanale; per il mensile le medie a 5, 10, 20 ({n_voti_m} voti). Se manca un voto per storia insufficiente, quell'orizzonte non è disponibile. I dati vengono da investing; la sua tabella usa un numero variabile di voti, quindi i saldi possono differire."
+  ],
+  [
+   "Qualificati e punteggio",
+   "Un ETF è qualificato se il saldo medio degli orizzonti disponibili è maggiore di zero (giornaliero e settimanale obbligatori, mensile se la storia lo permette). Per entrare serve anche saldo giornaliero positivo e ultima barra aggiornata. Il punteggio è la media dei saldi settimanale e mensile (solo settimanale se il mensile non è disponibile)."
+  ],
+  [
+   "Selezione",
+   "Core: da {core_min} a {core_max} posizioni; entra chi è nei primi {core_in} per punteggio, esce chi scende oltre la posizione {core_out}. Satellite: da {sat_pmin} a {sat_pmax} posizioni; entra chi è nei primi {sat_in}, esce oltre la posizione {sat_out}. In totale da 7 a 10 posizioni. Permanenza minima di {perm} settimane per le uscite dovute alla classifica; non vale per la perdita del trend (saldo medio non positivo) né per lo stress."
+  ],
+  [
+   "Pesi",
+   "Parte core {core_t}% e parte satellite {sat_t}% (tolleranza satellite {sat_min}%-{sat_max}%). Dentro ciascuna parte i pesi sono proporzionali al punteggio, con tetto di {tetto}% per singolo ETF. Se le posizioni di una parte sono meno del minimo, la quota non assegnata va in {paracadute} (paracadute)."
+  ],
+  [
+   "Ribilanciamento",
+   "Mensile (prima esecuzione del mese): porta l'intero portafoglio al target. Settimanale: interviene solo sulle posizioni il cui peso si discosta dal target di almeno {soglia} punti percentuali, oppure su tutto il portafoglio se il satellite esce dalla banda {sat_min}%-{sat_max}%."
+  ],
+  [
+   "Stress",
+   "Se almeno il {stress}% del peso azionario ha saldo giornaliero e settimanale entrambi negativi, le posizioni con saldo giornaliero e settimanale negativi escono subito verso {paracadute}, senza attendere il mese e senza permanenza minima."
+  ],
+  [
+   "Dati non aggiornati",
+   "Un ETF con ultima barra più vecchia della data di riferimento (la più frequente tra gli ETF dell'universo) resta fermo nel portafoglio ma non può entrare. Un ETF senza dati di dettaglio su investing non può essere valutato e, se in portafoglio, mantiene il peso."
+  ],
+  [
+   "Costi e confronto",
+   "Nel valore del modello si applica un costo di {costo}% per lato su ogni movimento. Confronto con IWMO e VNGA80 (che contiene circa il 20% di obbligazioni, quindi non è un confronto omogeneo con un portafoglio solo azionario). Il valore del modello parte da 100 alla prima esecuzione: non è un backtest."
+  ]
+ ]
+}
