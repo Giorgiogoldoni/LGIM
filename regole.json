@@ -1,6 +1,6 @@
 {
- "versione": "1.0",
- "aggiornato": "2026-10-13",
+ "versione": "1.1",
+ "aggiornato": "2026-10-14",
  "portafoglio": "LGIM",
  "parametri": {
   "satellite": {
@@ -23,8 +23,69 @@
     "esce_oltre": 3
    }
   },
-  "max_per_area_core": 2,
-  "max_per_famiglia_satellite": 2,
+  "limiti": {
+   "core": [
+    {
+     "campo": "area",
+     "valori": [
+      "USA"
+     ],
+     "max": 2
+    },
+    {
+     "campo": "area",
+     "valori": [
+      "Globale"
+     ],
+     "max": 2
+    },
+    {
+     "campo": "area",
+     "valori": [
+      "USA",
+      "Globale"
+     ],
+     "max": 3
+    },
+    {
+     "campo": "area",
+     "max": 1
+    }
+   ],
+   "satellite": [
+    {
+     "campo": "tema",
+     "max": 1
+    },
+    {
+     "campo": "famiglia",
+     "max": 2
+    }
+   ]
+  },
+  "soglie": {
+   "rsi": [
+    45,
+    55
+   ],
+   "stoch": [
+    45,
+    55
+   ],
+   "adx": 25
+  },
+  "download": {
+   "anni_storia": 10,
+   "salto_max": 2.5,
+   "salto_min": 0.4,
+   "min_barre": 30,
+   "quota_minima_dati": 50
+  },
+  "backtest": {
+   "inizio": "2022-01-07",
+   "calendario": "IWMO.MI"
+  },
+  "riempimento_richiede_settimanale_positivo": true,
   "tetto_peso": 50,
   "soglia_ribilanciamento": 5,
   "permanenza_minima_settimane": 4,
@@ -204,7 +265,8 @@
    "parte": "satellite",
    "famiglia": "Tecnologia",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "AI e robotica"
   },
   {
    "ticker": "ROBO.MI",
@@ -213,7 +275,8 @@
    "parte": "satellite",
    "famiglia": "Tecnologia",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "AI e robotica"
   },
   {
    "ticker": "MTVS.MI",
@@ -222,7 +285,8 @@
    "parte": "satellite",
    "famiglia": "Tecnologia",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Digitale"
   },
   {
    "ticker": "ISPY.MI",
@@ -231,7 +295,8 @@
    "parte": "satellite",
    "famiglia": "Tecnologia",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Cybersecurity"
   },
   {
    "ticker": "ESPY.MI",
@@ -240,7 +305,8 @@
    "parte": "satellite",
    "famiglia": "Tecnologia",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Cybersecurity"
   },
   {
    "ticker": "DPAY.MI",
@@ -249,7 +315,8 @@
    "parte": "satellite",
    "famiglia": "Tecnologia",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Digitale"
   },
   {
    "ticker": "ECOM.MI",
@@ -258,7 +325,8 @@
    "parte": "satellite",
    "famiglia": "Tecnologia",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Digitale"
   },
   {
    "ticker": "BIOT.MI",
@@ -267,7 +335,8 @@
    "parte": "satellite",
    "famiglia": "Salute",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Salute"
   },
   {
    "ticker": "DOCT.MI",
@@ -276,7 +345,8 @@
    "parte": "satellite",
    "famiglia": "Salute",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Salute"
   },
   {
    "ticker": "BATT.MI",
@@ -285,7 +355,8 @@
    "parte": "satellite",
    "famiglia": "Energia e ambiente",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Energia"
   },
   {
    "ticker": "RENW.MI",
@@ -294,7 +365,8 @@
    "parte": "satellite",
    "famiglia": "Energia e ambiente",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Energia"
   },
   {
    "ticker": "HTWO.MI",
@@ -303,7 +375,8 @@
    "parte": "satellite",
    "famiglia": "Energia e ambiente",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Energia"
   },
   {
    "ticker": "GLUG.MI",
@@ -312,7 +385,8 @@
    "parte": "satellite",
    "famiglia": "Energia e ambiente",
    "acc_fonte": "Report to Investors LGIM 2024",
-   "attivo": true
+   "attivo": true,
+   "tema": "Acqua"
   }
  ],
  "esclusi": [
@@ -404,19 +478,19 @@
  "testo": [
   [
    "Scopo e avvertenze",
-   "Portafoglio modello azionario con ETF L&G (LGIM), costruito con regole meccaniche sui segnali tecnici di investing. Non è una raccomandazione personalizzata. Le regole non sono state validate da un backtest e il consenso degli indicatori non è dimostrato predittivo: i risultati passati del modello non indicano quelli futuri."
+   "Portafoglio modello azionario con ETF L&G (LGIM), costruito con regole meccaniche sui segnali tecnici calcolati dai prezzi. Non è una raccomandazione personalizzata. Le regole non sono state validate da un backtest affidabile e il consenso degli indicatori non è dimostrato predittivo: i risultati passati del modello non indicano quelli futuri."
   ],
   [
    "Universo",
-   "ETF azionari L&G quotati su Borsa Italiana e Xetra, solo classi ad accumulazione verificate dall'ISIN, una sola classe per fondo. Esclusi materie prime, ETF a distribuzione e ETF con dati insufficienti. Parte core: {n_core} ETF diffusi su {n_aree} aree (massimo {max_area} per area). Parte satellite: {n_sat} ETF tematici, ciascuno area a sé, massimo {max_fam} per famiglia (tecnologia, salute, energia e ambiente)."
+   "ETF azionari L&G quotati su Borsa Italiana e Xetra, solo classi ad accumulazione verificate dall'ISIN, una sola classe per fondo. Esclusi materie prime, ETF a distribuzione e ETF con dati insufficienti. Parte core: {n_core} ETF diffusi su {n_aree} aree; limiti: {limiti_core}. Parte satellite: {n_sat} ETF tematici, ciascuno area a sé; limiti: {limiti_sat}."
   ],
   [
-   "Segnali",
-   "Per ogni orizzonte (giornaliero, settimanale, mensile) il saldo è (voti Compra meno voti Vendi) diviso i voti, con un set fisso: 9 indicatori (RSI, STOCH, STOCHRSI, MACD, ADX, CCI, ROC, Ultimate Oscillator, Bull/Bear Power) e le medie mobili semplici ed esponenziali a 5, 10, 20, 50 periodi ({n_voti_gs} voti) per giornaliero e settimanale; per il mensile le medie a 5, 10, 20 ({n_voti_m} voti). Se manca un voto per storia insufficiente, quell'orizzonte non è disponibile. I dati vengono da investing; la sua tabella usa un numero variabile di voti, quindi i saldi possono differire."
+   "Dati e segnali",
+   "I prezzi giornalieri sono scaricati da Yahoo Finance a ogni esecuzione (storia di {anni} anni); le barre con salti oltre {salto_max} volte o sotto {salto_min} volte il giorno precedente sono scartate. Per ogni orizzonte (giornaliero, settimanale, mensile) il saldo è (voti Compra meno voti Vendi) diviso i voti, con un set fisso: 9 indicatori (RSI e STOCH con soglie {rsi_lo}/{rsi_hi}, STOCHRSI, MACD, ADX con soglia {adx}, CCI, ROC, Ultimate Oscillator, Bull/Bear Power) e le medie mobili semplici ed esponenziali a 5, 10, 20, 50 periodi ({n_voti_gs} voti) per giornaliero e settimanale; per il mensile le medie a 5, 10, 20 ({n_voti_m} voti). Se manca un voto per storia insufficiente, quell'orizzonte non è disponibile."
   ],
   [
    "Qualificati e punteggio",
-   "Un ETF è qualificato se il saldo medio degli orizzonti disponibili è maggiore di zero (giornaliero e settimanale obbligatori, mensile se la storia lo permette). Per entrare serve anche saldo giornaliero positivo e ultima barra aggiornata. Il punteggio è la media dei saldi settimanale e mensile (solo settimanale se il mensile non è disponibile)."
+   "Un ETF è qualificato se il saldo medio degli orizzonti disponibili è maggiore di zero (giornaliero e settimanale obbligatori, mensile se la storia lo permette). Per entrare serve anche saldo giornaliero positivo e ultima barra aggiornata; l'ingresso fatto solo per raggiungere il numero minimo di posizioni richiede inoltre saldo settimanale positivo. Un ETF che non può entrare non occupa posti nei limiti di gruppo. Il punteggio è la media dei saldi settimanale e mensile (solo settimanale se il mensile non è disponibile)."
   ],
   [
    "Selezione",
@@ -436,11 +510,15 @@
   ],
   [
    "Dati non aggiornati",
-   "Un ETF con ultima barra più vecchia della data di riferimento (la più frequente tra gli ETF dell'universo) resta fermo nel portafoglio ma non può entrare. Un ETF senza dati di dettaglio su investing non può essere valutato e, se in portafoglio, mantiene il peso."
+   "Un ETF con ultima barra più vecchia della data di riferimento (la più frequente tra gli ETF dell'universo) resta fermo nel portafoglio ma non può entrare. Un ETF di cui Yahoo non consegna i dati non può essere valutato e, se in portafoglio, mantiene il peso. Se i dati mancano per più della meta' dell'universo l'esecuzione si ferma senza modificare nulla."
   ],
   [
    "Costi e confronto",
-   "Nel valore del modello si applica un costo di {costo}% per lato su ogni movimento. Confronto con IWMO e VNGA80 (che contiene circa il 20% di obbligazioni, quindi non è un confronto omogeneo con un portafoglio solo azionario). Il valore del modello parte da 100 alla prima esecuzione: non è un backtest."
+   "Nel valore del modello si applica un costo di {costo}% per lato su ogni movimento. Confronto con IWMO e VNGA80 (che contiene circa il 20% di obbligazioni, quindi non è un confronto omogeneo con un portafoglio solo azionario). Il valore del modello parte da 100 alla prima esecuzione."
+  ],
+  [
+   "Storico (backtest)",
+   "Il backtest riesegue le stesse regole sul passato: ogni venerdi' (ultima seduta della settimana) usa solo i prezzi fino a quel giorno, esegue alla seduta successiva con il costo di {costo}% per lato e considera solo gli ETF che esistevano e avevano storia sufficiente a quella data. Limiti: l'universo è quello di oggi (gli ETF chiusi nel frattempo non ci sono), i prezzi sono quelli di Yahoo Finance, il valore è rilevato a cadenza settimanale (il drawdown è quindi sottostimato), il mensile è disponibile solo dopo 30 mesi di storia. Un buon risultato passato non è una garanzia."
   ]
  ]
 }
