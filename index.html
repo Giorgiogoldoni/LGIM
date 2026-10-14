@@ -34,13 +34,19 @@ th{text-align:left;font-weight:600;color:var(--muted);border-bottom:2px solid va
 td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .pos{color:var(--pos)}.neg{color:var(--neg)}.mut{color:var(--muted)}
-.tk a{font-weight:600;color:var(--accent);text-decoration:none}
-.tk small{display:block;font-weight:400}
-.tk small a{font-weight:400;color:var(--muted);text-decoration:underline}
+.tk b{color:var(--accent)}
 .tag{display:inline-block;font-size:12px;padding:1px 7px;border-radius:10px;background:var(--fondo);border:1px solid var(--line);white-space:nowrap}
 .tag.core{background:#e8eef7}.tag.satellite{background:#f3ecf8}.tag.paracadute{background:#eef3ec}
 details{border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin-top:10px}
 summary{cursor:pointer;font-weight:600}
+.schede{display:flex;gap:4px;border-bottom:2px solid var(--line);margin:22px 0 0}
+.schede button{border:0;background:none;padding:9px 16px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.schede button[aria-selected=true]{color:var(--accent);border-bottom-color:var(--accent)}
+.schede button:focus-visible{outline:3px solid #7aa7e0;outline-offset:2px}
+.coll{display:inline-flex;gap:6px;align-items:center;margin-left:6px;font-size:12px;font-weight:400;white-space:nowrap}
+.coll a{color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.coll a:hover{color:var(--accent);border-color:var(--accent)}
+.tk .coll{display:flex;margin:3px 0 0}
 .grafico{width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
 .vuoto{padding:24px;border:1px dashed var(--line);border-radius:6px;color:var(--muted)}
 footer{margin-top:36px;color:var(--muted);font-size:13px}
@@ -63,21 +69,23 @@ footer{margin-top:36px;color:var(--muted);font-size:13px}
 <div class="testa">
  <div>
   <h1>Portafoglio LGIM</h1>
-  <p class="sotto">ETF azionari L&amp;G: parte core e satellite tematico, con paracadute su XEON</p>
+  <p class="sotto">ETF azionari L&amp;G: parte core e satellite tematico, con paracadute su XEON. Prezzi da Yahoo Finance</p>
  </div>
  <div class="bottoni">
-  <a class="pieno" href="data/portafoglio_lgim.xlsx" download>Scarica Excel</a>
+  <a class="pieno" id="excel" href="data/portafoglio_lgim.xlsx" download>Scarica Excel</a>
   <a href="data/regole_lgim.pdf" target="_blank" rel="noopener">Regole in PDF</a>
  </div>
 </div>
 
 <div class="avviso">
- <b>Modello, non consulenza.</b> Le regole non sono state validate da un backtest e il consenso degli indicatori non è dimostrato predittivo.
+ <b>Modello, non consulenza.</b> Il consenso degli indicatori non è dimostrato predittivo e un buon risultato passato non è una garanzia.
  Il valore del modello parte da 100 alla prima esecuzione e include un costo per lato su ogni movimento.
  <ul id="avvisi"></ul>
 </div>
 
+<div class="schede" role="tablist"><button role="tab" id="t-port" aria-selected="true">Portafoglio</button><button role="tab" id="t-stor" aria-selected="false">Storico (backtest)</button></div>
 <div id="contenuto"><div class="vuoto">Caricamento dei dati…</div></div>
+<div id="storico" hidden></div>
 
 <footer id="piede"></footer>
 </main>
@@ -89,15 +97,22 @@ const num = (v, d = 1) => v == null ? "–" : Number(v).toLocaleString("it-IT", 
 const saldo = v => v == null ? '<span class="mut">–</span>' : `<span class="${v > 0 ? "pos" : v < 0 ? "neg" : ""}">${v > 0 ? "+" : ""}${num(v)}</span>`;
 const data = d => d ? d.split("-").reverse().join("/") : "–";
 const BORSE = {".MI": "MIL", ".DE": "XETR", ".PA": "EURONEXT", ".L": "LSE"};
-function tv(t) {
-  const m = t.match(/^(.*?)(\.[A-Z]+)$/); if (!m) return null;
-  return BORSE[m[2]] ? `https://it.tradingview.com/chart/?symbol=${BORSE[m[2]]}%3A${encodeURIComponent(m[1])}` : null;
+const INV = "https://giorgiogoldoni.github.io/investing/";
+let DISPONIBILI = null, MAPPA = {}, ISIN = {};
+function tvUrl(t) {
+  const m = t.match(/^(.*?)(\.[A-Z]+)$/); if (!m || !BORSE[m[2]]) return null;
+  return "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(BORSE[m[2]] + ":" + m[1]);
 }
-const tick = t => {
-  const l = tv(t);
-  return `<td class="tk" data-label="Ticker"><a href="https://giorgiogoldoni.github.io/investing/dettaglio.html?y=${encodeURIComponent(t)}" target="_blank" rel="noopener">${esc(t)}</a>` +
-    (l ? `<small><a href="${l}" target="_blank" rel="noopener">TradingView</a></small>` : "") + `</td>`;
-};
+const invUrl = t => MAPPA[t] || (ISIN[t] ? "https://it.investing.com/search/?q=" + encodeURIComponent(ISIN[t]) : null);
+function coll(t) {
+  const y = encodeURIComponent(t), ok = DISPONIBILI === null || DISPONIBILI.has(t), tv = tvUrl(t), iv = invUrl(t);
+  return '<span class="coll">' +
+    (ok ? `<a href="${INV}dettaglio.html?y=${y}" target="_blank" rel="noopener" title="Grafico e dettaglio (investing)">📈</a>` : "") +
+    (tv ? `<a href="${tv}" target="_blank" rel="noopener" title="TradingView">TV↗</a>` : "") +
+    (iv ? `<a href="${iv}" target="_blank" rel="noopener" title="Investing.com">Inv↗</a>` : "") +
+    (ok ? `<a href="${INV}analisi.html?y=${y}" target="_blank" rel="noopener" title="Scheda analisi (investing)">▤</a>` : "") + "</span>";
+}
+const tick = t => `<td class="tk" data-label="Ticker"><b>${esc(t)}</b>${coll(t)}</td>`;
 const tag = p => `<span class="tag ${esc(p)}">${esc(p === "paracadute" ? "paracadute" : p)}</span>`;
 
 function grafico(serie, bench) {
@@ -165,11 +180,65 @@ function disegna(d) {
   });
   h += `</tbody></table></details>`;
   $("#contenuto").innerHTML = h;
-  $("#piede").textContent = `Generato il ${d.generato}. Regole versione ${d.regole_versione}. I saldi sono calcolati dai dati di investing con un set fisso di voti; i ticker aprono la scheda di investing.`;
+  $("#piede").textContent = `Generato il ${d.generato}. Regole versione ${d.regole_versione}. I saldi sono calcolati dai prezzi con un set fisso di voti; i collegamenti accanto ai ticker aprono le pagine di investing, TradingView e Investing.com.`;
 }
 
-fetch("data/portafoglio.json?v=" + Date.now()).then(r => { if (!r.ok) throw 0; return r.json(); }).then(disegna)
- .catch(() => { $("#contenuto").innerHTML = '<div class="vuoto">Nessun dato disponibile: il workflow «Portafoglio LGIM» non è ancora stato eseguito.</div>'; });
+const caricaJson = u => fetch(u + (u.includes("?") ? "&" : "?") + "v=" + Date.now()).then(r => { if (!r.ok) throw 0; return r.json(); });
+
+function attiva(nome) {
+  const port = nome === "port";
+  $("#t-port").setAttribute("aria-selected", port); $("#t-stor").setAttribute("aria-selected", !port);
+  $("#contenuto").hidden = !port; $("#storico").hidden = port;
+  $("#excel").href = port ? "data/portafoglio_lgim.xlsx" : "data/backtest_lgim.xlsx";
+  $("#excel").textContent = port ? "Scarica Excel" : "Scarica Excel dello storico";
+}
+$("#t-port").onclick = () => attiva("port"); $("#t-stor").onclick = () => attiva("stor");
+
+function storico(b) {
+  const nomi = {modello: "Modello"}; b.benchmark.forEach(k => nomi[k] = k.replace(".MI", ""));
+  const cols = Object.keys(nomi), st = b.statistiche, m = st.modello;
+  let h = `<div class="avviso"><b>Backtest, non previsione.</b> Stesse regole del portafoglio reale applicate al passato: ogni venerdì decisione con i soli prezzi fino a quel giorno,
+   esecuzione alla seduta successiva, costo ${num(b.costo_per_lato_pct, 2)}% per lato. L'universo è quello di oggi (nessun ETF chiuso), il valore è rilevato a cadenza settimanale
+   e il drawdown è quindi sottostimato. VNGA80 contiene circa il 20% di obbligazioni. Periodo ${data(b.periodo.inizio)} - ${data(b.periodo.fine)}, regole versione ${esc(b.regole_versione)}.
+   ${(b.avvisi || []).length ? "<ul>" + b.avvisi.map(a => `<li>${esc(a)}</li>`).join("") + "</ul>" : ""}</div>`;
+  h += `<h2>Risultati</h2><table class="card"><thead><tr><th>Serie</th><th class="n">Rendimento totale %</th><th class="n">Rendimento annuo %</th><th class="n">Volatilità annua %</th><th class="n">Drawdown massimo %</th></tr></thead><tbody>`;
+  cols.forEach(k => { const s = st[k]; h += `<tr><td data-label="Serie"><b>${esc(nomi[k])}</b></td><td class="n" data-label="Rendimento totale %">${saldo(s.rendimento_totale)}</td><td class="n" data-label="Rendimento annuo %">${saldo(s.rendimento_annuo)}</td><td class="n" data-label="Volatilità annua %">${num(s.volatilita_annua)}</td><td class="n" data-label="Drawdown massimo %">${saldo(s.drawdown_massimo)}</td></tr>`; });
+  h += `</tbody></table><div class="quadro" style="margin-top:12px">
+   <div><b>Turnover annuo</b><span>${num(m.turnover_annuo, 0)}%</span><small>del valore, a senso unico</small></div>
+   <div><b>Quota media in paracadute</b><span>${num(m.quota_media_paracadute)}%</span><small>tempo investito in XEON</small></div>
+   <div><b>Quota media nel satellite</b><span>${num(m.quota_media_satellite)}%</span><small>obiettivo 25%</small></div>
+   <div><b>Decisioni</b><span>${m.decisioni}</span><small>${Object.entries(b.azioni).map(([k, v]) => `${v} ${k.toLowerCase()}`).join(", ")}</small></div></div>`;
+  h += `<h2>Valore del modello e confronto</h2>${grafico(b.serie.map(p => Object.assign({}, p, {nav: p.modello})), b.benchmark)}`;
+  h += `<h2>Anni solari</h2><table class="card"><thead><tr><th>Anno</th>${cols.map(k => `<th class="n">${esc(nomi[k])} %</th>`).join("")}</tr></thead><tbody>` +
+    b.anni.map(a => `<tr><td data-label="Anno"><b>${esc(a.anno)}</b>${a.parziale ? ' <span class="mut">(parziale)</span>' : ""}</td>${cols.map(k => `<td class="n" data-label="${esc(nomi[k])} %">${saldo(a[k])}</td>`).join("")}</tr>`).join("") + `</tbody></table>`;
+  h += `<h2>Variazioni nel tempo</h2><table class="card"><thead><tr><th>Data</th><th>Azione</th><th>Ticker</th><th>Movimento</th><th class="n">Da %</th><th class="n">A %</th><th>Motivo</th></tr></thead><tbody>`;
+  b.storico.slice(0, 40).forEach(s => s.movimenti.forEach(mv => {
+    h += `<tr><td data-label="Data">${data(s.data)}</td><td data-label="Azione">${esc(s.azione.toLowerCase())}</td>${tick(mv.ticker)}<td data-label="Movimento">${esc(mv.azione.toLowerCase())}</td><td class="n" data-label="Da %">${num(mv.da)}</td><td class="n" data-label="A %">${num(mv.a)}</td><td data-label="Motivo">${esc(mv.motivo)}</td></tr>`; }));
+  h += `</tbody></table><p class="mut">Ultime 40 date con movimenti. L'elenco completo è nell'Excel.</p>`;
+  h += `<details><summary>Da quando ogni ETF ha un saldo valido</summary><table class="card" style="margin-top:10px"><thead><tr><th>Ticker</th><th>Primo saldo disponibile</th></tr></thead><tbody>` +
+    Object.entries(b.copertura).sort((x, y) => x[1].localeCompare(y[1])).map(([t, d]) => `<tr>${tick(t)}<td data-label="Dal">${data(d)}</td></tr>`).join("") + `</tbody></table></details>`;
+  $("#storico").innerHTML = h;
+}
+const vuotoStorico = '<div class="vuoto">Nessun backtest disponibile: lancia il workflow «Backtest LGIM» da Actions.</div>';
+function mostra() {
+  if (window._port) disegna(window._port);
+  if (window._bt) storico(window._bt); else $("#storico").innerHTML = vuotoStorico;
+}
+const conTimeout = (u, ms) => Promise.race([caricaJson(u), new Promise((_, no) => setTimeout(no, ms))]);
+function rendi() {
+  const p = window._port, b = window._bt;
+  if (p) { p.posizioni.concat(p.candidati).forEach(r => { if (r.isin) ISIN[r.ticker] = r.isin; }); disegna(p); }
+  else $("#contenuto").innerHTML = '<div class="vuoto">Nessun dato disponibile: il workflow «Portafoglio LGIM» non è ancora stato eseguito.</div>';
+  if (b) storico(b); else $("#storico").innerHTML = vuotoStorico;
+}
+Promise.all([caricaJson("data/portafoglio.json").catch(() => null), caricaJson("data/backtest.json").catch(() => null)]).then(([p, b]) => {
+  window._port = p; window._bt = b; rendi();
+  // collegamenti a investing: la pagina non aspetta, si ridisegna quando arrivano (fino a 6 secondi)
+  Promise.all([conTimeout(INV + "data/tech/index.json", 6000).then(d => d.righe.filter(r => r.det).map(r => r.ticker)).catch(() => null),
+               conTimeout(INV + "investing_map.json", 6000).catch(() => ({}))]).then(([det, mappa]) => {
+    if (det || (mappa && Object.keys(mappa).length)) { DISPONIBILI = det ? new Set(det) : null; MAPPA = mappa || {}; rendi(); }
+  });
+});
 </script>
 </body>
 </html>
