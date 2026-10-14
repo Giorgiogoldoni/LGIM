@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portafoglio LGIM</title>
+<style>
+:root{--ink:#1b2430;--muted:#5b6675;--line:#dfe4ea;--accent:#1f3a5f;--pos:#1a7f4b;--neg:#b3261e;--avviso:#fff8e6;--avviso-bordo:#e8c766;--fondo:#f5f7fa}
+*{box-sizing:border-box}
+html{background:#fff}
+body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:26px;margin:0 0 2px;letter-spacing:-.01em}
+h2{font-size:17px;margin:32px 0 10px}
+.sotto{color:var(--muted);margin:0}
+.testa{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-end}
+.bottoni{display:flex;gap:8px;flex-wrap:wrap}
+.bottoni a{display:inline-block;padding:9px 14px;border:1px solid var(--accent);border-radius:6px;color:var(--accent);text-decoration:none;font-weight:600;background:#fff}
+.bottoni a.pieno{background:var(--accent);color:#fff}
+.bottoni a:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #7aa7e0;outline-offset:2px}
+.avviso{background:var(--avviso);border:1px solid var(--avviso-bordo);border-radius:6px;padding:10px 14px;margin:16px 0;font-size:14px}
+.avviso ul{margin:6px 0 0 18px;padding:0}
+.quadro{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:18px 0}
+.quadro div{background:var(--fondo);border-radius:6px;padding:10px 12px}
+.quadro b{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:2px}
+.quadro span{font-size:17px;font-weight:600}
+.quadro small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.barra{display:flex;height:22px;border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.barra i{display:block;height:100%}
+.legenda{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:13px;color:var(--muted)}
+.legenda em{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;font-style:normal}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);border-bottom:2px solid var(--line);padding:6px 8px;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.pos{color:var(--pos)}.neg{color:var(--neg)}.mut{color:var(--muted)}
+.tk a{font-weight:600;color:var(--accent);text-decoration:none}
+.tk small{display:block;font-weight:400}
+.tk small a{font-weight:400;color:var(--muted);text-decoration:underline}
+.tag{display:inline-block;font-size:12px;padding:1px 7px;border-radius:10px;background:var(--fondo);border:1px solid var(--line);white-space:nowrap}
+.tag.core{background:#e8eef7}.tag.satellite{background:#f3ecf8}.tag.paracadute{background:#eef3ec}
+details{border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin-top:10px}
+summary{cursor:pointer;font-weight:600}
+.grafico{width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+.vuoto{padding:24px;border:1px dashed var(--line);border-radius:6px;color:var(--muted)}
+footer{margin-top:36px;color:var(--muted);font-size:13px}
+@media (max-width:720px){
+ h1{font-size:22px}
+ table.card thead{display:none}
+ table.card,table.card tbody,table.card tr,table.card td{display:block;width:100%}
+ table.card tr{border:1px solid var(--line);border-radius:6px;margin-bottom:10px;padding:6px 8px}
+ table.card td{border:0;padding:3px 0;display:flex;justify-content:space-between;gap:12px;text-align:right}
+ table.card td::before{content:attr(data-label);color:var(--muted);text-align:left;flex:0 0 40%}
+ table.card td.tk{display:block;text-align:left}
+ table.card td.tk::before{content:none}
+ table.card td.n{text-align:right}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<div class="testa">
+ <div>
+  <h1>Portafoglio LGIM</h1>
+  <p class="sotto">ETF azionari L&amp;G: parte core e satellite tematico, con paracadute su XEON</p>
+ </div>
+ <div class="bottoni">
+  <a class="pieno" href="data/portafoglio_lgim.xlsx" download>Scarica Excel</a>
+  <a href="data/regole_lgim.pdf" target="_blank" rel="noopener">Regole in PDF</a>
+ </div>
+</div>
+
+<div class="avviso">
+ <b>Modello, non consulenza.</b> Le regole non sono state validate da un backtest e il consenso degli indicatori non è dimostrato predittivo.
+ Il valore del modello parte da 100 alla prima esecuzione e include un costo per lato su ogni movimento.
+ <ul id="avvisi"></ul>
+</div>
+
+<div id="contenuto"><div class="vuoto">Caricamento dei dati…</div></div>
+
+<footer id="piede"></footer>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num = (v, d = 1) => v == null ? "–" : Number(v).toLocaleString("it-IT", {minimumFractionDigits: d, maximumFractionDigits: d});
+const saldo = v => v == null ? '<span class="mut">–</span>' : `<span class="${v > 0 ? "pos" : v < 0 ? "neg" : ""}">${v > 0 ? "+" : ""}${num(v)}</span>`;
+const data = d => d ? d.split("-").reverse().join("/") : "–";
+const BORSE = {".MI": "MIL", ".DE": "XETR", ".PA": "EURONEXT", ".L": "LSE"};
+function tv(t) {
+  const m = t.match(/^(.*?)(\.[A-Z]+)$/); if (!m) return null;
+  return BORSE[m[2]] ? `https://it.tradingview.com/chart/?symbol=${BORSE[m[2]]}%3A${encodeURIComponent(m[1])}` : null;
+}
+const tick = t => {
+  const l = tv(t);
+  return `<td class="tk" data-label="Ticker"><a href="https://giorgiogoldoni.github.io/investing/dettaglio.html?y=${encodeURIComponent(t)}" target="_blank" rel="noopener">${esc(t)}</a>` +
+    (l ? `<small><a href="${l}" target="_blank" rel="noopener">TradingView</a></small>` : "") + `</td>`;
+};
+const tag = p => `<span class="tag ${esc(p)}">${esc(p === "paracadute" ? "paracadute" : p)}</span>`;
+
+function grafico(serie, bench) {
+  if (serie.length < 2) return '<div class="vuoto">Il grafico compare dalla seconda esecuzione: oggi c\'è un solo punto.</div>';
+  const W = 900, H = 260, L = 44, R = 90, T = 14, B = 26;
+  const chiavi = [["nav", "Modello", "#1f3a5f"]].concat(bench.map((b, i) => [b, b.replace(".MI", ""), ["#c0662b", "#6b8e23"][i % 2]]));
+  const val = serie.flatMap(p => chiavi.map(([k]) => p[k]).filter(v => v != null));
+  let mn = Math.min(...val), mx = Math.max(...val); const pad = (mx - mn) * .08 || 1; mn -= pad; mx += pad;
+  const x = i => L + (W - L - R) * i / (serie.length - 1), y = v => T + (H - T - B) * (1 - (v - mn) / (mx - mn));
+  let s = `<svg class="grafico" viewBox="0 0 ${W} ${H}" role="img" aria-label="Valore del modello e benchmark, base 100">`;
+  for (let k = 0; k <= 4; k++) { const v = mn + (mx - mn) * k / 4, yy = y(v); s += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" stroke="#e6eaef"/><text x="${L - 6}" y="${yy + 4}" font-size="11" text-anchor="end" fill="#5b6675">${num(v, mx - mn < 6 ? 1 : 0)}</text>`; }
+  chiavi.forEach(([k, nome, col]) => {
+    const pts = serie.map((p, i) => p[k] == null ? null : `${x(i)},${y(p[k])}`).filter(Boolean);
+    if (!pts.length) return;
+    s += `<polyline fill="none" stroke="${col}" stroke-width="2.2" points="${pts.join(" ")}"/>`;
+    const u = serie.filter(p => p[k] != null).slice(-1)[0];
+    s += `<text x="${W - R + 6}" y="${y(u[k]) + 4}" font-size="12" fill="${col}">${esc(nome)} ${num(u[k])}</text>`;
+  });
+  s += `<text x="${L}" y="${H - 6}" font-size="11" fill="#5b6675">${data(serie[0].data)}</text><text x="${W - R}" y="${H - 6}" font-size="11" text-anchor="end" fill="#5b6675">${data(serie[serie.length - 1].data)}</text></svg>`;
+  return s;
+}
+
+function disegna(d) {
+  const q = d.quote, n = d.nav;
+  const bm = d.benchmark.map(b => `${esc(b.replace(".MI", ""))} ${num(n[b])}`).join(", ");
+  $("#avvisi").innerHTML = (d.avvisi || []).map(a => `<li>${esc(a)}</li>`).join("");
+  const stress = d.stress;
+  let h = `<div class="quadro">
+   <div><b>Dati al</b><span>${data(d.dati_al)}</span><small>esecuzione del ${data(d.data_esecuzione)}</small></div>
+   <div><b>Ultima azione</b><span>${esc(d.azione.toLowerCase())}</span><small>${esc(d.motivo)}</small></div>
+   <div><b>Stress</b><span class="${stress.attivo ? "neg" : "pos"}">${stress.attivo ? "attivo" : "non attivo"}</span><small>${num(stress.quota, 0)}% del peso azionario in calo, soglia ${num(stress.soglia, 0)}%</small></div>
+   <div><b>Valore del modello</b><span>${num(n.nav)}</span><small>base 100. Confronto: ${bm || "n.d."}</small></div>
+  </div>`;
+  h += `<h2>Composizione</h2><div class="barra" role="img" aria-label="Core ${q.core}%, satellite ${q.satellite}%, paracadute ${q.paracadute}%">
+   <i style="width:${q.core}%;background:#1f3a5f"></i><i style="width:${q.satellite}%;background:#8a5fa8"></i><i style="width:${q.paracadute}%;background:#9bb08a"></i></div>
+   <div class="legenda"><span><em style="background:#1f3a5f"></em>Core ${num(q.core)}%</span><span><em style="background:#8a5fa8"></em>Satellite ${num(q.satellite)}%</span><span><em style="background:#9bb08a"></em>${esc(d.paracadute.replace(".MI", ""))} ${num(q.paracadute)}%</span></div>`;
+  h += `<table class="card" style="margin-top:14px"><thead><tr><th>Ticker</th><th>Nome</th><th>Parte</th><th>Area o famiglia</th><th class="n">Peso %</th><th class="n">Target %</th><th class="n">Giorn.</th><th class="n">Sett.</th><th class="n">Mens.</th><th class="n">Punteggio</th><th>Dal</th><th>Dati</th></tr></thead><tbody>`;
+  d.posizioni.forEach(r => {
+    h += `<tr>${tick(r.ticker)}<td data-label="Nome">${esc(r.nome)}</td><td data-label="Parte">${tag(r.parte)}</td><td data-label="Area o famiglia">${esc(r.gruppo || "–")}</td>
+     <td class="n" data-label="Peso %"><b>${num(r.peso)}</b></td><td class="n" data-label="Target %">${num(r.target)}</td><td class="n" data-label="Giornaliero">${saldo(r.D)}</td><td class="n" data-label="Settimanale">${saldo(r.W)}</td><td class="n" data-label="Mensile">${saldo(r.M)}</td>
+     <td class="n" data-label="Punteggio">${num(r.punteggio)}</td><td data-label="Dal">${data(r.ingresso)}</td><td data-label="Dati">${esc(r.dati)}</td></tr>`;
+  });
+  h += `</tbody></table>`;
+  h += `<h2>Valore del modello e confronto</h2>${grafico(d.nav_serie, d.benchmark)}`;
+  h += `<h2>Movimenti</h2>`;
+  if (!d.storico.length) h += '<div class="vuoto">Nessun movimento registrato.</div>';
+  else {
+    h += `<table class="card"><thead><tr><th>Data</th><th>Azione</th><th>Ticker</th><th>Movimento</th><th class="n">Da %</th><th class="n">A %</th><th>Motivo</th></tr></thead><tbody>`;
+    d.storico.slice(0, 12).forEach(s => {
+      if (!s.movimenti.length) h += `<tr><td data-label="Data">${data(s.data)}</td><td data-label="Azione">${esc(s.azione.toLowerCase())}</td><td colspan="5" class="mut">${esc(s.motivo)}, nessun movimento</td></tr>`;
+      s.movimenti.forEach(m => {
+        h += `<tr><td data-label="Data">${data(s.data)}</td><td data-label="Azione">${esc(s.azione.toLowerCase())}</td>${tick(m.ticker)}<td data-label="Movimento">${esc(m.azione.toLowerCase())}</td>
+         <td class="n" data-label="Da %">${num(m.da)}</td><td class="n" data-label="A %">${num(m.a)}</td><td data-label="Motivo">${esc(m.motivo)}</td></tr>`;
+      });
+    });
+    h += `</tbody></table>`;
+  }
+  const gr = {"in portafoglio": 0, "qualificato, non selezionato": 1, "non qualificato": 2, "escluso": 3};
+  const cand = d.candidati.slice().sort((a, b) => (gr[a.stato] ?? 9) - (gr[b.stato] ?? 9) || (b.punteggio ?? -999) - (a.punteggio ?? -999));
+  h += `<details><summary>Tutti i candidati (${cand.length})</summary><table class="card" style="margin-top:10px"><thead><tr><th>Ticker</th><th>Nome</th><th>Parte</th><th>Area o famiglia</th><th class="n">Giorn.</th><th class="n">Sett.</th><th class="n">Mens.</th><th class="n">Punteggio</th><th>Stato</th><th>Motivo</th></tr></thead><tbody>`;
+  cand.forEach(c => {
+    h += `<tr>${tick(c.ticker)}<td data-label="Nome">${esc(c.nome)}</td><td data-label="Parte">${c.parte === "-" ? "–" : tag(c.parte)}</td><td data-label="Area o famiglia">${esc(c.gruppo === "-" ? "–" : c.gruppo)}</td>
+     <td class="n" data-label="Giornaliero">${saldo(c.D)}</td><td class="n" data-label="Settimanale">${saldo(c.W)}</td><td class="n" data-label="Mensile">${saldo(c.M)}</td><td class="n" data-label="Punteggio">${num(c.punteggio)}</td>
+     <td data-label="Stato">${esc(c.stato)}</td><td data-label="Motivo">${esc(c.motivo || "")}</td></tr>`;
+  });
+  h += `</tbody></table></details>`;
+  $("#contenuto").innerHTML = h;
+  $("#piede").textContent = `Generato il ${d.generato}. Regole versione ${d.regole_versione}. I saldi sono calcolati dai dati di investing con un set fisso di voti; i ticker aprono la scheda di investing.`;
+}
+
+fetch("data/portafoglio.json?v=" + Date.now()).then(r => { if (!r.ok) throw 0; return r.json(); }).then(disegna)
+ .catch(() => { $("#contenuto").innerHTML = '<div class="vuoto">Nessun dato disponibile: il workflow «Portafoglio LGIM» non è ancora stato eseguito.</div>'; });
+</script>
+</body>
+</html>
