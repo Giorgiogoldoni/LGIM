@@ -1,0 +1,41 @@
+name: Portafoglio LGIM
+on:
+  workflow_dispatch:
+    inputs:
+      forza_mensile:
+        description: "Forza il ribilanciamento mensile (true/false)"
+        default: "false"
+  schedule:
+    - cron: "30 19 * * 1"   # lunedi' 19:30 UTC, dopo l'aggiornamento di investing delle 16:45
+permissions:
+  contents: write
+concurrency:
+  group: portafoglio
+  cancel-in-progress: false
+jobs:
+  calcola:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: Giorgiogoldoni/investing
+          path: investing
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install openpyxl reportlab
+      - name: Calcola il portafoglio
+        run: |
+          if [ "${{ github.event.inputs.forza_mensile }}" = "true" ]; then
+            python scripts/portafoglio.py --forza-mensile
+          else
+            python scripts/portafoglio.py
+          fi
+      - name: Salva i risultati
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data
+          git diff --staged --quiet || (git commit -m "Aggiornamento portafoglio LGIM" && git pull --rebase origin ${{ github.ref_name }} && git push)
