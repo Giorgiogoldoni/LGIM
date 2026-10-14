@@ -1,0 +1,111 @@
+{
+ "versione": 1,
+ "creato": "2026-10-14",
+ "valore": 99.85,
+ "posizioni": {
+  "LGGL.MI": {
+   "unita": 0.6057326930772309,
+   "prezzo": 24.99,
+   "ingresso": "2026-10-14"
+  },
+  "LGUS.MI": {
+   "unita": 0.5354531305270605,
+   "prezzo": 28.27,
+   "ingresso": "2026-10-14"
+  },
+  "LABL.MI": {
+   "unita": 0.8878913438256658,
+   "prezzo": 16.52,
+   "ingresso": "2026-10-14"
+  },
+  "ISPY.MI": {
+   "unita": 0.522891364902507,
+   "prezzo": 44.875,
+   "ingresso": "2026-10-14"
+  },
+  "GLUG.MI": {
+   "unita": 0.08207748794388424,
+   "prezzo": 18.248,
+   "ingresso": "2026-10-14"
+  },
+  "XEON.MI": {
+   "unita": 0.19898077638678469,
+   "prezzo": 150.492,
+   "ingresso": "2026-10-14"
+  }
+ },
+ "ultimo_mensile": "2026-10",
+ "benchmark_base": {
+  "IWMO.MI": 103.38,
+  "VNGA80.MI": 45.01
+ },
+ "nav_serie": [
+  {
+   "data": "2026-10-14",
+   "dati_al": "2026-10-13",
+   "nav": 99.85,
+   "IWMO.MI": 100.0,
+   "VNGA80.MI": 100.0,
+   "azione": "INIZIO"
+  }
+ ],
+ "storico": [
+  {
+   "data": "2026-10-14",
+   "dati_al": "2026-10-13",
+   "azione": "INIZIO",
+   "motivo": "prima esecuzione: il portafoglio adotta il target",
+   "movimenti": [
+    {
+     "ticker": "GLUG.MI",
+     "nome": "L&G CLEAN WATER UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 1.5,
+     "motivo": "posizione 3, per raggiungere il minimo di 2"
+    },
+    {
+     "ticker": "ISPY.MI",
+     "nome": "L&G CYBER SECURITY UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 23.5,
+     "motivo": "posizione 1 nella parte satellite"
+    },
+    {
+     "ticker": "LABL.MI",
+     "nome": "L&G Global Brands UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 14.7,
+     "motivo": "posizione 4 nella parte core"
+    },
+    {
+     "ticker": "LGGL.MI",
+     "nome": "L&G GLOBAL EQUITY UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 15.2,
+     "motivo": "posizione 2 nella parte core"
+    },
+    {
+     "ticker": "LGUS.MI",
+     "nome": "L&G US EQUITY UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 15.2,
+     "motivo": "posizione 3 nella parte core"
+    },
+    {
+     "ticker": "XEON.MI",
+     "nome": "XTRACKERS II EUR OVNI RATE SWA UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 30.0,
+     "motivo": "quota non assegnata"
+    }
+   ]
+  }
+ ],
+ "ultima_esecuzione": "2026-10-14"
+}
