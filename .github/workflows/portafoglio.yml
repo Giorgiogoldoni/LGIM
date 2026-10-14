@@ -6,7 +6,7 @@ on:
         description: "Forza il ribilanciamento mensile (true/false)"
         default: "false"
   schedule:
-    - cron: "30 19 * * 1"   # lunedi' 19:30 UTC, dopo l'aggiornamento di investing delle 16:45
+    - cron: "30 19 * * 1"   # lunedì 19:30 UTC: la barra del venerdì di Yahoo Finance è già disponibile
 permissions:
   contents: write
 concurrency:
@@ -15,17 +15,13 @@ concurrency:
 jobs:
   calcola:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          repository: Giorgiogoldoni/investing
-          path: investing
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install openpyxl reportlab
+      - run: pip install yfinance pandas numpy openpyxl reportlab
       - name: Calcola il portafoglio
         run: |
           if [ "${{ github.event.inputs.forza_mensile }}" = "true" ]; then
@@ -34,6 +30,7 @@ jobs:
             python scripts/portafoglio.py
           fi
       - name: Salva i risultati
+        if: ${{ always() }}
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
