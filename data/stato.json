@@ -1,0 +1,129 @@
+{
+ "versione": 2,
+ "creato": "2026-10-15",
+ "valore": 99.85,
+ "posizioni": {
+  "SP1.MI": {
+   "unita": 1.5176304046991596,
+   "prezzo": 10.697999954223633,
+   "ingresso": "2026-10-15"
+  },
+  "LGGL.MI": {
+   "unita": 0.6468873608667773,
+   "prezzo": 24.989999771118164,
+   "ingresso": "2026-10-15"
+  },
+  "LGUS.MI": {
+   "unita": 0.5718328524314005,
+   "prezzo": 28.270000457763672,
+   "ingresso": "2026-10-15"
+  },
+  "LGJP.MI": {
+   "unita": 0.845752575546282,
+   "prezzo": 19.11400032043457,
+   "ingresso": "2026-10-15"
+  },
+  "XML4.DE": {
+   "unita": 0.4360524507262108,
+   "prezzo": 23.264999389648438,
+   "ingresso": "2026-10-15"
+  },
+  "ISPY.MI": {
+   "unita": 0.28770150417827295,
+   "prezzo": 44.875,
+   "ingresso": "2026-10-15"
+  },
+  "ECOM.MI": {
+   "unita": 0.672914299423706,
+   "prezzo": 17.90999984741211,
+   "ingresso": "2026-10-15"
+  },
+  "XEON.MI": {
+   "unita": 6.634899950824575e-05,
+   "prezzo": 150.49209594726562,
+   "ingresso": "2026-10-15"
+  }
+ },
+ "ultimo_mensile": "2026-10",
+ "benchmark_base": {
+  "IWMO.MI": 103.37999725341797,
+  "VNGA80.MI": 45.0099983215332
+ },
+ "nav_serie": [
+  {
+   "data": "2026-10-15",
+   "dati_al": "2026-10-13",
+   "nav": 99.85,
+   "IWMO.MI": 100.0,
+   "VNGA80.MI": 100.0,
+   "azione": "INIZIO"
+  }
+ ],
+ "storico": [
+  {
+   "data": "2026-10-15",
+   "dati_al": "2026-10-13",
+   "azione": "INIZIO",
+   "motivo": "prima esecuzione: il portafoglio adotta il target",
+   "movimenti": [
+    {
+     "ticker": "ECOM.MI",
+     "nome": "L&G ECOMMERCE LOGISTICS UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 12.1,
+     "motivo": "posizione 2 nella parte satellite"
+    },
+    {
+     "ticker": "ISPY.MI",
+     "nome": "L&G CYBER SECURITY UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 12.9,
+     "motivo": "posizione 1 nella parte satellite"
+    },
+    {
+     "ticker": "LGGL.MI",
+     "nome": "L&G GLOBAL EQUITY UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 16.2,
+     "motivo": "posizione 2 nella parte core"
+    },
+    {
+     "ticker": "LGJP.MI",
+     "nome": "L&G JAPAN EQUITY UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 16.2,
+     "motivo": "posizione 4 nella parte core"
+    },
+    {
+     "ticker": "LGUS.MI",
+     "nome": "L&G US EQUITY UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 16.2,
+     "motivo": "posizione 3 nella parte core"
+    },
+    {
+     "ticker": "SP1.MI",
+     "nome": "L&G S&P 100 UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 16.3,
+     "motivo": "posizione 1 nella parte core"
+    },
+    {
+     "ticker": "XML4.DE",
+     "nome": "L&G UK Equity UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 10.2,
+     "motivo": "posizione 5 nella parte core"
+    }
+   ]
+  }
+ ],
+ "ultima_esecuzione": "2026-10-15"
+}
