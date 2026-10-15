@@ -121,6 +121,22 @@
    ]
   }
  },
+ "consigliato": {
+  "fonte": "L&G, portafoglio equity suggerito",
+  "valido_dal": "2026-10-14",
+  "ribilanciamento": "annuale",
+  "pesi": {
+   "LGUS.MI": 35,
+   "LGEU.MI": 15,
+   "XML4.DE": 5,
+   "LGJP.MI": 10,
+   "LGAP.MI": 7.5,
+   "RTWO.MI": 2.5,
+   "AIAI.MI": 10,
+   "RIEM.MI": 15
+  },
+  "note": "Aree: Nord America 35, Europa ex UK 15, Regno Unito 5, Giappone 10, Pacifico ex Giappone 7,5, small cap USA 2,5, AI 10, mercati emergenti 15. Si aggiorna ogni 3 o 6 mesi: aggiungere una nuova versione con la data di validita'."
+ },
  "universo": [
   {
    "ticker": "LGUS.MI",
