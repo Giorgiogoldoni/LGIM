@@ -219,6 +219,52 @@ function storico(b) {
     Object.entries(b.copertura).sort((x, y) => x[1].localeCompare(y[1])).map(([t, d]) => `<tr>${tick(t)}<td data-label="Dal">${data(d)}</td></tr>`).join("") + `</tbody></table></details>`;
   $("#storico").innerHTML = h;
 }
+
+const COLORI = {base: ["#1f3a5f", ""], senza_costi: ["#5b8fd6", ""], sempre_investito: ["#8a5fa8", ""], universo_pu: ["#2e8b57", ""],
+                consigliato: ["#c98a00", ""], "IWMO.MI": ["#c0662b", "6 4"], "VNGA80.MI": ["#6b8e23", "6 4"]};
+function graficoMulti(serie, chiavi, nomi) {
+  if (serie.length < 2) return '<div class="vuoto">Dati insufficienti per il grafico.</div>';
+  const W = 900, H = 300, L = 44, R = 150, T = 14, B = 26;
+  const val = serie.flatMap(p => chiavi.map(k => p[k]).filter(v => v != null));
+  let mn = Math.min(...val), mx = Math.max(...val); const pad = (mx - mn) * .06 || 1; mn -= pad; mx += pad;
+  const x = i => L + (W - L - R) * i / (serie.length - 1), y = v => T + (H - T - B) * (1 - (v - mn) / (mx - mn));
+  let h = `<svg class="grafico" viewBox="0 0 ${W} ${H}" role="img" aria-label="Valore delle serie a confronto, base 100">`;
+  for (let k = 0; k <= 4; k++) { const v = mn + (mx - mn) * k / 4, yy = y(v); h += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" stroke="#e6eaef"/><text x="${L - 6}" y="${yy + 4}" font-size="11" text-anchor="end" fill="#5b6675">${num(v, 0)}</text>`; }
+  const fini = [];
+  chiavi.forEach(k => {
+    const pts = serie.map((p, i) => p[k] == null ? null : `${x(i)},${y(p[k])}`).filter(Boolean);
+    if (!pts.length) return;
+    const [col, dash] = COLORI[k] || ["#444", ""], u = serie.filter(p => p[k] != null).slice(-1)[0];
+    h += `<polyline fill="none" stroke="${col}" stroke-width="2.1" ${dash ? `stroke-dasharray="${dash}"` : ""} points="${pts.join(" ")}"/>`;
+    fini.push({k, col, v: u[k], y: y(u[k])});
+  });
+  fini.sort((a, b) => a.y - b.y);
+  for (let i = 1; i < fini.length; i++) if (fini[i].y - fini[i - 1].y < 13) fini[i].y = fini[i - 1].y + 13;
+  fini.forEach(f => { h += `<text x="${W - R + 6}" y="${f.y + 4}" font-size="12" fill="${f.col}">${esc(nomi[f.k] || f.k)} ${num(f.v)}</text>`; });
+  return h + `<text x="${L}" y="${H - 6}" font-size="11" fill="#5b6675">${data(serie[0].data)}</text><text x="${W - R}" y="${H - 6}" font-size="11" text-anchor="end" fill="#5b6675">${data(serie[serie.length - 1].data)}</text></svg>`;
+}
+function scomposizione(sc) {
+  const nomi = {base: "Regole attuali", senza_costi: "Senza costi", sempre_investito: "Sempre investito", universo_pu: "Universo pesi uguali", consigliato: "Consigliato L&G"};
+  sc.benchmark.forEach(b => nomi[b] = b.replace(".MI", ""));
+  const desc = Object.assign({}, sc.descrizioni); sc.benchmark.forEach(b => desc[b] = "Benchmark " + b.replace(".MI", ""));
+  const chiavi = sc.ordine.concat(sc.benchmark).filter(k => sc.statistiche[k]), st = sc.statistiche;
+  let h = `<h2>Scomposizione: da dove viene la differenza</h2>
+   <p class="mut">Le stesse regole, confrontate con varianti e riferimenti sugli stessi dati e sullo stesso periodo (${data(sc.periodo.inizio)} - ${data(sc.periodo.fine)}).
+   Non cambiano il portafoglio: servono a capire cosa funziona. <a href="data/scomposizione_lgim.xlsx" download>Scarica Excel della scomposizione</a>.</p>
+   <table class="card"><thead><tr><th>Serie</th><th class="n">Totale %</th><th class="n">Annuo %</th><th class="n">Volatilità %</th><th class="n">Drawdown max %</th><th class="n">Turnover annuo %</th><th class="n">In XEON %</th></tr></thead><tbody>`;
+  chiavi.forEach(k => { const s = st[k];
+    h += `<tr><td data-label="Serie"><b>${esc(nomi[k] || k)}</b><br><span class="mut" style="font-size:12px">${esc(desc[k] || "")}</span></td>
+     <td class="n" data-label="Totale %">${saldo(s.rendimento_totale)}</td><td class="n" data-label="Annuo %">${saldo(s.rendimento_annuo)}</td><td class="n" data-label="Volatilità %">${num(s.volatilita_annua)}</td>
+     <td class="n" data-label="Drawdown max %">${saldo(s.drawdown_massimo)}</td><td class="n" data-label="Turnover annuo %">${s.turnover_annuo == null ? "–" : num(s.turnover_annuo, 0)}</td>
+     <td class="n" data-label="In XEON %">${s.quota_media_paracadute == null ? "–" : num(s.quota_media_paracadute)}</td></tr>`; });
+  h += `</tbody></table><p class="mut">Come leggerla: «Senza costi» isola il peso del turnover; «Sempre investito» toglie filtro di trend, stress e XEON e lascia solo classifica e pesi; «Universo pesi uguali» dice se la selezione batte il semplice possesso; «Consigliato L&G» è il riferimento della casa madre (pesi in regole.json, valido dal ${data(sc.consigliato_valido_dal)}).</p>`;
+  h += graficoMulti(sc.serie, chiavi, nomi);
+  h += `<h3 style="font-size:15px;margin:22px 0 8px">Anni solari</h3><table class="card"><thead><tr><th>Anno</th>${chiavi.map(k => `<th class="n">${esc(nomi[k] || k)} %</th>`).join("")}</tr></thead><tbody>` +
+    sc.anni.map(a => `<tr><td data-label="Anno"><b>${esc(a.anno)}</b>${a.parziale ? ' <span class="mut">(parziale)</span>' : ""}</td>${chiavi.map(k => `<td class="n" data-label="${esc(nomi[k] || k)} %">${saldo(a[k])}</td>`).join("")}</tr>`).join("") + `</tbody></table>`;
+  if ((sc.avvisi || []).length) h += `<div class="avviso"><ul>${sc.avvisi.map(a => `<li>${esc(a)}</li>`).join("")}</ul></div>`;
+  return h;
+}
+
 const vuotoStorico = '<div class="vuoto">Nessun backtest disponibile: lancia il workflow «Backtest LGIM» da Actions.</div>';
 function mostra() {
   if (window._port) disegna(window._port);
@@ -230,9 +276,10 @@ function rendi() {
   if (p) { p.posizioni.concat(p.candidati).forEach(r => { if (r.isin) ISIN[r.ticker] = r.isin; }); disegna(p); }
   else $("#contenuto").innerHTML = '<div class="vuoto">Nessun dato disponibile: il workflow «Portafoglio LGIM» non è ancora stato eseguito.</div>';
   if (b) storico(b); else $("#storico").innerHTML = vuotoStorico;
+  if (window._sc) $("#storico").insertAdjacentHTML("beforeend", scomposizione(window._sc));
 }
-Promise.all([caricaJson("data/portafoglio.json").catch(() => null), caricaJson("data/backtest.json").catch(() => null)]).then(([p, b]) => {
-  window._port = p; window._bt = b; rendi();
+Promise.all([caricaJson("data/portafoglio.json").catch(() => null), caricaJson("data/backtest.json").catch(() => null), caricaJson("data/scomposizione.json").catch(() => null)]).then(([p, b, sc]) => {
+  window._port = p; window._bt = b; window._sc = sc; rendi();
   // collegamenti a investing: la pagina non aspetta, si ridisegna quando arrivano (fino a 6 secondi)
   Promise.all([conTimeout(INV + "data/tech/index.json", 6000).then(d => d.righe.filter(r => r.det).map(r => r.ticker)).catch(() => null),
                conTimeout(INV + "investing_map.json", 6000).catch(() => ({}))]).then(([det, mappa]) => {
