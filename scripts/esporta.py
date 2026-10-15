@@ -206,3 +206,30 @@ def scrivi_xlsx_backtest(bt, R, path):
     _foglio(wb, "Copertura ETF", ["Ticker", "Nome", "Primo saldo disponibile"],
             [[t, nomi.get(t, t), bt["copertura"].get(t, "mai nel periodo")] for t in nomi], [11, 50, 24])
     wb.save(path)
+
+
+def scrivi_xlsx_scomposizione(sc, path):
+    wb = Workbook()
+    chiavi = [k for k in sc["ordine"] + sc["benchmark"] if k in sc["statistiche"]]
+    desc = dict(sc["descrizioni"]); desc.update({b: "Benchmark " + b.replace(".MI", "") for b in sc["benchmark"]})
+    righe = []
+    for k in chiavi:
+        s = sc["statistiche"][k]
+        righe.append([k, desc.get(k), s["rendimento_totale"], s["rendimento_annuo"], s["volatilita_annua"], s["drawdown_massimo"],
+                      s.get("turnover_annuo"), s.get("quota_media_paracadute")])
+    ws = _foglio(wb, "Sintesi", ["Serie", "Descrizione", "Rendimento totale %", "Rendimento annuo %", "Volatilità annua %",
+                                 "Drawdown massimo %", "Turnover annuo % (senso unico)", "Quota media in paracadute %"],
+                 righe, [20, 80, 18, 18, 18, 18, 22, 22], primo=True)
+    for r in ([None] * 8, ["Periodo", f"{sc['periodo']['inizio']} - {sc['periodo']['fine']}"],
+              ["Costo per lato %", sc["costo_per_lato_pct"]], ["Regole versione", sc["regole_versione"]],
+              ["Consigliato L&G valido dal", sc["consigliato_valido_dal"]],
+              ["Limiti", "Universo di oggi (nessun ETF chiuso), prezzi Yahoo Finance, valori settimanali: il drawdown è sottostimato."]):
+        ws.append(r)
+    for row in ws.iter_rows(min_row=2):
+        for c in row:
+            c.font = Font(name=FONT, size=10)
+    _foglio(wb, "Valore", ["Data"] + chiavi, [[p["data"]] + [p.get(k) for k in chiavi] for p in sc["serie"]], [12] + [16] * len(chiavi))
+    _foglio(wb, "Anni solari", ["Anno", "Parziale"] + [k + " %" for k in chiavi],
+            [[a["anno"], "sì" if a["parziale"] else "no"] + [a.get(k) for k in chiavi] for a in sc["anni"]], [10, 10] + [18] * len(chiavi))
+    _foglio(wb, "Pesi consigliato L&G", ["Ticker", "Peso %"], [[t, w] for t, w in sc["consigliato_pesi"].items()], [14, 10])
+    wb.save(path)
