@@ -64,9 +64,12 @@ def costruisci_candidati(R, valutazioni):
         out.append(c)
     date = collections.Counter(c["ultima"] for c in out if c["ultima"])
     rif = max(date.items(), key=lambda kv: (kv[1], kv[0]))[0] if date else None
+    var = R["parametri"].get("variante", {})
     for c in out:
+        if var.get("senza_filtro_trend") and c["saldo_medio"] is not None and c.get("attivo", True):
+            c["ok_ranking"] = True
         c["vecchio"] = bool(rif and c["ultima"] and c["ultima"] < rif)
-        c["ok_ingresso"] = bool(c["ok_ranking"] and (c["D"] or 0) > 0 and not c["vecchio"])
+        c["ok_ingresso"] = bool(c["ok_ranking"] and ((c["D"] or 0) > 0 or var.get("senza_filtro_trend")) and not c["vecchio"])
         if c["vecchio"] and c["motivo"] is None:
             c["motivo"] = f"ultima barra {c['ultima']} più vecchia del riferimento {rif}"
     return out, rif
@@ -134,7 +137,8 @@ def scegli_parte(parte, cands, tenuti, R, oggi, ingressi, congelati):
             break
         if c["ticker"] in pos or not c["ok_ingresso"]:
             continue
-        if P.get("riempimento_richiede_settimanale_positivo") and (c["W"] or 0) <= 0:
+        if P.get("riempimento_richiede_settimanale_positivo") and (c["W"] or 0) <= 0 \
+                and not P.get("variante", {}).get("senza_filtro_trend"):
             continue
         if entra_ok(c, [per_t[x] for x in pos], lim)[0]:
             pos.append(c["ticker"])
@@ -147,7 +151,8 @@ def pesi_parte(parte, pos, cands, P, congelati, cw):
     budget = P["core_target"] if parte == "core" else P["satellite"]["target"]
     fissi = {t: cw.get(t, 0.0) for t in pos if t in congelati}
     liberi = [t for t in pos if t not in congelati]
-    B = max(0.0, budget - sum(fissi.values())) * min(1.0, len(pos) / pc["min"])
+    frazione = 1.0 if P.get("variante", {}).get("senza_paracadute") else min(1.0, len(pos) / pc["min"])
+    B = max(0.0, budget - sum(fissi.values())) * frazione
     p = {t: max(per_t[t]["punteggio"] if per_t[t]["punteggio"] is not None else 1.0, 1.0) for t in liberi}
     w = {t: 0.0 for t in liberi}
     if liberi and B > 0:
@@ -176,9 +181,33 @@ def obiettivo(cands, tenuti, R, oggi, ingressi, cw):
     for parte in ("core", "satellite"):
         pos, m = scegli_parte(parte, cands, tenuti, R, oggi, ingressi, congelati)
         meta.update(m); tgt.update(pesi_parte(parte, pos, cands, P, congelati, cw))
+    if P.get("variante", {}).get("senza_paracadute"):
+        tgt = completa_investito(tgt, P["tetto_peso"])
     tgt = {t: round(v, 2) for t, v in tgt.items() if v > 0.004}
     tgt[P["paracadute"]] = round(max(0.0, 100.0 - sum(tgt.values())), 2)
     return tgt, meta
+
+
+def completa_investito(tgt, tetto):
+    """Variante di analisi: porta le posizioni a 100% (tetto per ETF rispettato) invece di parcheggiare in paracadute."""
+    tot = sum(tgt.values())
+    if tot <= 0 or tot >= 100 - 1e-9:
+        return tgt
+    w = {t: v * 100.0 / tot for t, v in tgt.items()}
+    for _ in range(10):
+        sopra = [t for t in w if w[t] > tetto + 1e-9]
+        if not sopra:
+            break
+        ecc = sum(w[t] - tetto for t in sopra)
+        for t in sopra:
+            w[t] = float(tetto)
+        sotto = [t for t in w if w[t] < tetto - 1e-9]
+        if not sotto:
+            break
+        ps = sum(w[t] for t in sotto)
+        for t in sotto:
+            w[t] += ecc * w[t] / ps
+    return w
 
 
 # ----------------------------------------------------------------------- stato
@@ -206,7 +235,7 @@ def passo(R, cands, prezzi, stato, oggi, forza_mensile=False):
     negativi = [t for t in tenuti if per_t.get(t) and per_t[t]["D"] is not None and per_t[t]["W"] is not None
                 and per_t[t]["D"] < 0 and per_t[t]["W"] < 0 and not per_t[t]["vecchio"]]
     quota_stress = (sum(cw[t] for t in negativi) / eq * 100) if eq > 0 else 0.0
-    stress = eq > 0 and quota_stress >= P["stress_quota_peso"]
+    stress = eq > 0 and quota_stress >= P["stress_quota_peso"] and not P.get("variante", {}).get("senza_stress")
     tgt, meta = obiettivo(cands, tenuti, R, oggi, ingressi, cw)
     mese = oggi.strftime("%Y-%m")
     if nuovo:
