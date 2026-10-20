@@ -130,12 +130,20 @@
    "LGEU.MI": 15,
    "XML4.DE": 5,
    "LGJP.MI": 10,
-   "LGAP.MI": 7.5,
-   "RTWO.MI": 2.5,
+   "LGAP.MI": 8,
+   "RTWO.MI": 2,
    "AIAI.MI": 10,
    "RIEM.MI": 15
   },
-  "note": "Aree: Nord America 35, Europa ex UK 15, Regno Unito 5, Giappone 10, Pacifico ex Giappone 7,5, small cap USA 2,5, AI 10, mercati emergenti 15. Si aggiorna ogni 3 o 6 mesi: aggiungere una nuova versione con la data di validita'."
+  "note": "Aree: Nord America 35, Europa ex UK 15, Regno Unito 5, Giappone 10, Pacifico ex Giappone 8, small cap USA 2, AI 10, mercati emergenti 15. Pesi interi con somma 100: Pacifico ex Giappone 7,5 arrotondato a 8, small cap USA 2,5 arrotondato a 2. Si aggiorna ogni 3 o 6 mesi: cambiare i pesi e la data valido_dal.",
+  "variazione": {
+   "frequenza": "mensile",
+   "min_punti": 2,
+   "max_punti": 15,
+   "coefficiente": 0.15,
+   "cumulativa": true,
+   "azzera_a_nuova_versione": true
+  }
  },
  "universo": [
   {
@@ -535,6 +543,41 @@
   [
    "Storico (backtest)",
    "Il backtest riesegue le stesse regole sul passato: ogni venerdi' (ultima seduta della settimana) usa solo i prezzi fino a quel giorno, esegue alla seduta successiva con il costo di {costo}% per lato e considera solo gli ETF che esistevano e avevano storia sufficiente a quella data. Limiti: l'universo è quello di oggi (gli ETF chiusi nel frattempo non ci sono), i prezzi sono quelli di Yahoo Finance, il valore è rilevato a cadenza settimanale (il drawdown è quindi sottostimato), il mensile è disponibile solo dopo 30 mesi di storia. Un buon risultato passato non è una garanzia."
+  ]
+ ],
+ "versione_consigliato": "1.0",
+ "testo_consigliato": [
+  [
+   "Scopo e avvertenze",
+   "Il Consigliato riporta il portafoglio azionario suggerito da L&G (fonte: {fonte}; in vigore dal {valido_dal}), con pesi interi. E' una visualizzazione: non ha valore del modello, operazioni né costi. Accanto ai pesi L&G compare un peso suggerito dai nostri indicatori, che non è stato validato: non è una raccomandazione personalizzata e un buon risultato passato non è una garanzia."
+  ],
+  [
+   "Pesi L&G",
+   "I pesi sono interi con somma 100: Asia-Pacifico ex Giappone 8 e Russell 2000 small cap 2 derivano da 7,5 e 2,5. Si aggiornano a mano ogni 3 o 6 mesi con una nuova versione e la nuova data di validità; oltre 6 mesi dalla data di validità la pagina mostra un avviso. A ogni nuova versione il peso suggerito riparte dai nuovi pesi L&G."
+  ],
+  [
+   "Punteggio",
+   "Il punteggio di ogni ETF è lo stesso del modello tattico: media dei saldi settimanale e mensile, da -100 a +100, calcolata dai prezzi di Yahoo Finance."
+  ],
+  [
+   "Variazione mensile",
+   "Una volta al mese (prima esecuzione del mese) ogni ETF può variare da {min_punti} a {max_punti} punti percentuali. Si calcola la media dei punteggi pesata sui pesi correnti: chi sta sopra la media guadagna, chi sta sotto cede, {coeff} punti per ogni punto di scarto, arrotondati all'intero. Le variazioni sotto {min_punti} punti non si applicano. Il massimo mensile per ETF è il minore tra {max_punti} punti e il suo peso corrente (al massimo raddoppia o esce; da zero può rientrare di {min_punti} punti), e nessun peso supera il {tetto}%."
+  ],
+  [
+   "Somma 100",
+   "Aumenti e riduzioni si compensano: il lato più grande viene ridotto in proporzione fino a pareggiare l'altro, con arrotondamento all'intero, e il calcolo si ripete finché ogni variazione è di almeno {min_punti} punti. Se i punteggi sono tutti vicini alla media non cambia nulla. Il portafoglio resta sempre investito: nessuna quota in XEON o liquidità, quindi non c'è alcuna protezione in un ribasso generale, in cui si spostano solo i pesi tra gli ETF."
+  ],
+  [
+   "Effetto cumulativo",
+   "Le variazioni si sommano di mese in mese: il peso suggerito di un mese è il punto di partenza del successivo. Dopo alcuni mesi i pesi possono essere lontani da quelli di L&G: lo scarto è sempre mostrato accanto al peso L&G."
+  ],
+  [
+   "Dati",
+   "Un ETF senza dati o con l'ultima barra più vecchia del riferimento non varia e non entra nella media. Se meno di due ETF sono valutabili il mese non cambia nulla."
+  ],
+  [
+   "Limiti",
+   "Questa regola di variazione non ha un backtest: gli indicatori non sono validati. Il portafoglio L&G statico, ribilanciato ogni anno, è confrontato nella scheda Storico, nella scomposizione."
   ]
  ]
 }
