@@ -206,3 +206,113 @@ def scrivi_xlsx_backtest(bt, R, path):
     _foglio(wb, "Copertura ETF", ["Ticker", "Nome", "Primo saldo disponibile"],
             [[t, nomi.get(t, t), bt["copertura"].get(t, "mai nel periodo")] for t in nomi], [11, 50, 24])
     wb.save(path)
+
+
+def scrivi_xlsx_scomposizione(sc, path):
+    wb = Workbook()
+    chiavi = [k for k in sc["ordine"] + sc["benchmark"] if k in sc["statistiche"]]
+    desc = dict(sc["descrizioni"]); desc.update({b: "Benchmark " + b.replace(".MI", "") for b in sc["benchmark"]})
+    righe = []
+    for k in chiavi:
+        s = sc["statistiche"][k]
+        righe.append([k, desc.get(k), s["rendimento_totale"], s["rendimento_annuo"], s["volatilita_annua"], s["drawdown_massimo"],
+                      s.get("turnover_annuo"), s.get("quota_media_paracadute")])
+    ws = _foglio(wb, "Sintesi", ["Serie", "Descrizione", "Rendimento totale %", "Rendimento annuo %", "Volatilità annua %",
+                                 "Drawdown massimo %", "Turnover annuo % (senso unico)", "Quota media in paracadute %"],
+                 righe, [20, 80, 18, 18, 18, 18, 22, 22], primo=True)
+    for r in ([None] * 8, ["Periodo", f"{sc['periodo']['inizio']} - {sc['periodo']['fine']}"],
+              ["Costo per lato %", sc["costo_per_lato_pct"]], ["Regole versione", sc["regole_versione"]],
+              ["Consigliato L&G valido dal", sc["consigliato_valido_dal"]],
+              ["Limiti", "Universo di oggi (nessun ETF chiuso), prezzi Yahoo Finance, valori settimanali: il drawdown è sottostimato."]):
+        ws.append(r)
+    for row in ws.iter_rows(min_row=2):
+        for c in row:
+            c.font = Font(name=FONT, size=10)
+    _foglio(wb, "Valore", ["Data"] + chiavi, [[p["data"]] + [p.get(k) for k in chiavi] for p in sc["serie"]], [12] + [16] * len(chiavi))
+    _foglio(wb, "Anni solari", ["Anno", "Parziale"] + [k + " %" for k in chiavi],
+            [[a["anno"], "sì" if a["parziale"] else "no"] + [a.get(k) for k in chiavi] for a in sc["anni"]], [10, 10] + [18] * len(chiavi))
+    _foglio(wb, "Pesi consigliato L&G", ["Ticker", "Peso %"], [[t, w] for t, w in sc["consigliato_pesi"].items()], [14, 10])
+    wb.save(path)
+
+
+# ------------------------------------------------------------ Consigliato LGIM
+def _num_it(x):
+    return str(x).replace(".", ",")
+
+
+def testo_consigliato(R):
+    C = R["consigliato"]; V = C["variazione"]
+    s = {"fonte": C["fonte"], "valido_dal": C["valido_dal"], "min_punti": V["min_punti"], "max_punti": V["max_punti"],
+         "coeff": _num_it(V["coefficiente"]), "tetto": R["parametri"]["tetto_peso"]}
+    return [(t, x.format(**s)) for t, x in R["testo_consigliato"]]
+
+
+def scrivi_xlsx_consigliato(cons, R, path):
+    wb = Workbook()
+    _foglio(wb, "Consigliato",
+            ["Ticker", "Nome", "ISIN", "Area / tema", "Peso L&G %", "Peso suggerito %", "Scarto (punti)", "Ultima variazione (punti)",
+             "Saldo G", "Saldo S", "Saldo M", "Punteggio", "Dati"],
+            [[r["ticker"], r["nome"], r["isin"], r["gruppo"], r["peso_lgim"], r["peso"], r["scarto"], r["ultima_variazione"],
+              r["D"], r["W"], r["M"], r["punteggio"], r["dati"]] for r in cons["posizioni"]],
+            [11, 46, 15, 20, 11, 14, 12, 16, 9, 9, 9, 10, 14], primo=True)
+    mov = []
+    for s in cons["storico"]:
+        if not s["variazioni"]:
+            mov.append([s["data"], s["dati_al"], s["motivo"], s["media_punteggi"], None, None, None, None])
+        for t, v in s["variazioni"].items():
+            a = s["pesi"].get(t)
+            mov.append([s["data"], s["dati_al"], s["motivo"], s["media_punteggi"], t, a - v if a is not None else None, a, v])
+    _foglio(wb, "Storico mensile", ["Data", "Dati al", "Motivo", "Media punteggi", "Ticker", "Da %", "A %", "Variazione (punti)"],
+            mov, [12, 12, 44, 14, 11, 8, 8, 16])
+    V = R["consigliato"]["variazione"]
+    righe = [["Fonte dei pesi", cons["fonte"]], ["Pesi L&G validi dal", cons["valido_dal"]], ["Ultimo aggiornamento mensile", cons["aggiornato_il"]],
+             ["Prossimo aggiornamento", cons["prossimo_aggiornamento"]], ["Variazione mensile minima (punti)", V["min_punti"]],
+             ["Variazione mensile massima (punti)", V["max_punti"]], ["Coefficiente (punti per punto di scarto)", V["coefficiente"]],
+             ["Tetto per ETF %", cons["tetto"]], ["Cumulativa", "sì"], ["Versione regole del Consigliato", cons["regole_versione"]], [None, None]]
+    righe += [[t, x] for t, x in testo_consigliato(R)]
+    ws = _foglio(wb, "Regole", ["Voce", "Valore"], righe, [46, 120])
+    for row in ws.iter_rows(min_row=2):
+        for c in row:
+            c.alignment = Alignment(wrap_text=True, vertical="top")
+    wb.save(path)
+
+
+def scrivi_pdf_consigliato(R, path):
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+    from reportlab.lib.units import cm
+    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+    st = getSampleStyleSheet()
+    titolo = ParagraphStyle("t", parent=st["Title"], fontName="Helvetica-Bold", fontSize=18, alignment=0, spaceAfter=4)
+    h = ParagraphStyle("h", parent=st["Heading2"], fontName="Helvetica-Bold", fontSize=12, spaceBefore=10, spaceAfter=3)
+    b = ParagraphStyle("b", parent=st["BodyText"], fontName="Helvetica", fontSize=9.5, leading=13)
+    pic = ParagraphStyle("p", parent=b, fontSize=8.5, textColor=colors.HexColor("#555555"))
+    C = R["consigliato"]; V = C["variazione"]
+    doc = SimpleDocTemplate(path, pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm, topMargin=1.8 * cm, bottomMargin=1.8 * cm,
+                            title="Regole del Consigliato LGIM")
+    story = [Paragraph("Regole del Consigliato LGIM", titolo),
+             Paragraph(escape(_sicuro(f"Versione {R.get('versione_consigliato', '1.0')}, pesi L&G validi dal {C['valido_dal']}. "
+                                      "Generato automaticamente da regole.json.")), pic)]
+    for t, x in testo_consigliato(R):
+        story += [Paragraph(escape(_sicuro(t)), h), Paragraph(escape(_sicuro(x)), b)]
+    tab = [["Parametro", "Valore"], ["Fonte dei pesi", _sicuro(C["fonte"])], ["Pesi validi dal", C["valido_dal"]],
+           ["Frequenza della variazione", V["frequenza"]],
+           ["Variazione minima / massima", f"{V['min_punti']} / {V['max_punti']} punti"],
+           ["Coefficiente", f"{_num_it(V['coefficiente'])} punti per punto di scarto"],
+           ["Tetto per singolo ETF", f"{R['parametri']['tetto_peso']}%"], ["Effetto cumulativo", "sì"]]
+    t1 = Table(tab, colWidths=[7 * cm, 10 * cm])
+    t1.setStyle(TableStyle([("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+                            ("FONTSIZE", (0, 0), (-1, -1), 9), ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1F3A5F")),
+                            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white), ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#BBBBBB"))]))
+    univ = {u["ticker"]: u for u in R["universo"]}
+    righe = [["Ticker", "Nome", "Area / tema", "Peso L&G %"]] + [
+        [t, _sicuro(univ[t]["nome"]), univ[t].get("area") or univ[t].get("tema") or univ[t].get("famiglia"), str(w)]
+        for t, w in sorted(C["pesi"].items(), key=lambda kv: -kv[1])]
+    t2 = Table(righe, colWidths=[2.2 * cm, 8.6 * cm, 3.8 * cm, 2.4 * cm], repeatRows=1)
+    t2.setStyle(TableStyle([("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"), ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+                            ("FONTSIZE", (0, 0), (-1, -1), 8.5), ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1F3A5F")),
+                            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white), ("GRID", (0, 0), (-1, -1), 0.3, colors.HexColor("#CCCCCC")),
+                            ("ALIGN", (3, 0), (3, -1), "RIGHT")]))
+    story += [Paragraph("Parametri in vigore", h), t1, Spacer(1, 8), Paragraph("Pesi L&G", h), t2]
+    doc.build(story)
