@@ -17,7 +17,7 @@ jobs:
           python-version: "3.12"
       - run: pip install yfinance pandas numpy openpyxl reportlab
       - name: Scarica i prezzi ed esegui il backtest
-        run: python scripts/backtest.py
+        run: python backtest.py
       - name: Salva i risultati
         run: |
           git config user.name "github-actions"
