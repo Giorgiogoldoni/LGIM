@@ -25,9 +25,9 @@ jobs:
       - name: Calcola il portafoglio
         run: |
           if [ "${{ github.event.inputs.forza_mensile }}" = "true" ]; then
-            python scripts/portafoglio.py --forza-mensile
+            python portafoglio.py --forza-mensile
           else
-            python scripts/portafoglio.py
+            python portafoglio.py
           fi
       - name: Salva i risultati
         if: ${{ always() }}
