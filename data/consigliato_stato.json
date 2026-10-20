@@ -1,0 +1,51 @@
+{
+ "versione": 1,
+ "valido_dal": "2026-10-14",
+ "mese": "2026-10",
+ "aggiornato_il": "2026-10-20",
+ "pesi": {
+  "LGUS.MI": 40,
+  "LGEU.MI": 15,
+  "XML4.DE": 7,
+  "LGJP.MI": 13,
+  "LGAP.MI": 8,
+  "RTWO.MI": 2,
+  "AIAI.MI": 10,
+  "RIEM.MI": 5
+ },
+ "pesi_prima": {
+  "LGUS.MI": 35,
+  "LGEU.MI": 15,
+  "XML4.DE": 5,
+  "LGJP.MI": 10,
+  "LGAP.MI": 8,
+  "RTWO.MI": 2,
+  "AIAI.MI": 10,
+  "RIEM.MI": 15
+ },
+ "storico": [
+  {
+   "data": "2026-10-20",
+   "mese": "2026-10",
+   "dati_al": "2026-10-16",
+   "motivo": "primo calcolo: partenza dai pesi L&G",
+   "media_punteggi": 49.6,
+   "variazioni": {
+    "LGUS.MI": 5,
+    "XML4.DE": 2,
+    "LGJP.MI": 3,
+    "RIEM.MI": -10
+   },
+   "pesi": {
+    "LGUS.MI": 40,
+    "LGEU.MI": 15,
+    "XML4.DE": 7,
+    "LGJP.MI": 13,
+    "LGAP.MI": 8,
+    "RTWO.MI": 2,
+    "AIAI.MI": 10,
+    "RIEM.MI": 5
+   }
+  }
+ ]
+}

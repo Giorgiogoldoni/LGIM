@@ -65,6 +65,14 @@
    "IWMO.MI": 96.88,
    "VNGA80.MI": 99.07,
    "azione": "MANTENIMENTO"
+  },
+  {
+   "data": "2026-10-20",
+   "dati_al": "2026-10-16",
+   "nav": 98.35,
+   "IWMO.MI": 96.88,
+   "VNGA80.MI": 99.07,
+   "azione": "MANTENIMENTO"
   }
  ],
  "storico": [
@@ -133,5 +141,5 @@
    ]
   }
  ],
- "ultima_esecuzione": "2026-10-19"
+ "ultima_esecuzione": "2026-10-20"
 }
