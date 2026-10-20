@@ -73,7 +73,7 @@ footer{margin-top:36px;color:var(--muted);font-size:13px}
  </div>
  <div class="bottoni">
   <a class="pieno" id="excel" href="data/portafoglio_lgim.xlsx" download>Scarica Excel</a>
-  <a href="data/regole_lgim.pdf" target="_blank" rel="noopener">Regole in PDF</a>
+  <a id="pdf" href="data/regole_lgim.pdf" target="_blank" rel="noopener">Regole in PDF</a>
  </div>
 </div>
 
@@ -83,8 +83,9 @@ footer{margin-top:36px;color:var(--muted);font-size:13px}
  <ul id="avvisi"></ul>
 </div>
 
-<div class="schede" role="tablist"><button role="tab" id="t-port" aria-selected="true">Portafoglio</button><button role="tab" id="t-stor" aria-selected="false">Storico (backtest)</button></div>
+<div class="schede" role="tablist"><button role="tab" id="t-port" aria-selected="true">Modello tattico</button><button role="tab" id="t-cons" aria-selected="false">Consigliato</button><button role="tab" id="t-stor" aria-selected="false">Storico (backtest)</button></div>
 <div id="contenuto"><div class="vuoto">Caricamento dei dati…</div></div>
+<div id="consigliato" hidden></div>
 <div id="storico" hidden></div>
 
 <footer id="piede"></footer>
@@ -185,14 +186,17 @@ function disegna(d) {
 
 const caricaJson = u => fetch(u + (u.includes("?") ? "&" : "?") + "v=" + Date.now()).then(r => { if (!r.ok) throw 0; return r.json(); });
 
+const SCHEDE = {
+  port: {t: "#t-port", p: "#contenuto", xlsx: "data/portafoglio_lgim.xlsx", testo: "Scarica Excel", pdf: "data/regole_lgim.pdf"},
+  cons: {t: "#t-cons", p: "#consigliato", xlsx: "data/consigliato_lgim.xlsx", testo: "Scarica Excel del Consigliato", pdf: "data/regole_consigliato.pdf"},
+  stor: {t: "#t-stor", p: "#storico", xlsx: "data/backtest_lgim.xlsx", testo: "Scarica Excel dello storico", pdf: "data/regole_lgim.pdf"}
+};
 function attiva(nome) {
-  const port = nome === "port";
-  $("#t-port").setAttribute("aria-selected", port); $("#t-stor").setAttribute("aria-selected", !port);
-  $("#contenuto").hidden = !port; $("#storico").hidden = port;
-  $("#excel").href = port ? "data/portafoglio_lgim.xlsx" : "data/backtest_lgim.xlsx";
-  $("#excel").textContent = port ? "Scarica Excel" : "Scarica Excel dello storico";
+  Object.entries(SCHEDE).forEach(([k, v]) => { $(v.t).setAttribute("aria-selected", k === nome); $(v.p).hidden = k !== nome; });
+  const v = SCHEDE[nome];
+  $("#excel").href = v.xlsx; $("#excel").textContent = v.testo; $("#pdf").href = v.pdf;
 }
-$("#t-port").onclick = () => attiva("port"); $("#t-stor").onclick = () => attiva("stor");
+Object.keys(SCHEDE).forEach(k => { $(SCHEDE[k].t).onclick = () => attiva(k); });
 
 function storico(b) {
   const nomi = {modello: "Modello"}; b.benchmark.forEach(k => nomi[k] = k.replace(".MI", ""));
@@ -265,6 +269,43 @@ function scomposizione(sc) {
   return h;
 }
 
+const MESI_IT = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
+const meseIt = m => m ? MESI_IT[+m.slice(5, 7) - 1] + " " + m.slice(0, 4) : "–";
+const punti = v => v == null ? '<span class="mut">–</span>' : v === 0 ? '<span class="mut">0</span>' : `<span class="${v > 0 ? "pos" : "neg"}">${v > 0 ? "+" : "−"}${Math.abs(v)}</span>`;
+function disegnaCons(c) {
+  const V = c.variazione;
+  let h = `<div class="avviso"><b>Solo visivo, non validato.</b> I pesi L&amp;G sono il portafoglio suggerito dalla casa madre (${esc(c.fonte)}), con pesi interi. Il peso suggerito dagli indicatori
+   può variare da ${V.min_punti} a ${V.max_punti} punti ogni mese, si somma di mese in mese e non è una raccomandazione.
+   ${(c.avvisi || []).length ? "<ul>" + c.avvisi.map(a => `<li>${esc(a)}</li>`).join("") + "</ul>" : ""}</div>`;
+  h += `<div class="quadro">
+   <div><b>Pesi L&amp;G validi dal</b><span>${data(c.valido_dal)}</span><small>da aggiornare ogni 3 o 6 mesi</small></div>
+   <div><b>Ultimo aggiornamento mensile</b><span>${meseIt(c.mese)}</span><small>calcolato il ${data(c.aggiornato_il)}, dati al ${data(c.dati_al)}</small></div>
+   <div><b>Prossimo aggiornamento</b><span>${esc(c.prossimo_aggiornamento)}</span><small>prima esecuzione del mese</small></div>
+   <div><b>Media dei punteggi</b><span>${num(c.media_punteggi)}</span><small>pesata sui pesi correnti</small></div>
+  </div>`;
+  const totL = c.posizioni.reduce((a, r) => a + r.peso_lgim, 0), totP = c.posizioni.reduce((a, r) => a + r.peso, 0);
+  h += `<h2>Pesi L&amp;G e peso suggerito</h2><table class="card"><thead><tr><th>Ticker</th><th>Nome</th><th>Area o tema</th><th class="n">Peso L&amp;G %</th><th class="n">Peso suggerito %</th><th class="n">Scarto</th><th class="n">Ultima variazione</th><th class="n">Giorn.</th><th class="n">Sett.</th><th class="n">Mens.</th><th class="n">Punteggio</th></tr></thead><tbody>`;
+  c.posizioni.forEach(r => {
+    h += `<tr>${tick(r.ticker)}<td data-label="Nome">${esc(r.nome)}</td><td data-label="Area o tema">${esc(r.gruppo || "–")}</td>
+     <td class="n" data-label="Peso L&amp;G %">${num(r.peso_lgim, 0)}</td><td class="n" data-label="Peso suggerito %"><b>${num(r.peso, 0)}</b></td>
+     <td class="n" data-label="Scarto">${punti(r.scarto)}</td><td class="n" data-label="Ultima variazione">${punti(r.ultima_variazione)}</td>
+     <td class="n" data-label="Giornaliero">${saldo(r.D)}</td><td class="n" data-label="Settimanale">${saldo(r.W)}</td><td class="n" data-label="Mensile">${saldo(r.M)}</td>
+     <td class="n" data-label="Punteggio">${num(r.punteggio)}</td></tr>`;
+  });
+  h += `<tr><td colspan="3"><b>Totale</b></td><td class="n"><b>${num(totL, 0)}</b></td><td class="n"><b>${num(totP, 0)}</b></td><td colspan="6"></td></tr></tbody></table>`;
+  h += `<h2>Aggiornamenti mensili</h2>`;
+  if (!c.storico.length) h += '<div class="vuoto">Nessun aggiornamento registrato.</div>';
+  else {
+    h += `<table class="card"><thead><tr><th>Data</th><th>Motivo</th><th class="n">Media punteggi</th><th>Variazioni (punti)</th></tr></thead><tbody>`;
+    c.storico.slice(0, 12).forEach(s => {
+      const v = Object.entries(s.variazioni).sort((a, b) => b[1] - a[1]).map(([t, x]) => `${esc(t.replace(/\.[A-Z]+$/, ""))} ${x > 0 ? "+" : "−"}${Math.abs(x)}`).join(", ");
+      h += `<tr><td data-label="Data">${data(s.data)}</td><td data-label="Motivo">${esc(s.motivo)}</td><td class="n" data-label="Media punteggi">${num(s.media_punteggi)}</td><td data-label="Variazioni">${v || '<span class="mut">nessuna variazione</span>'}</td></tr>`;
+    });
+    h += `</tbody></table>`;
+  }
+  $("#consigliato").innerHTML = h;
+}
+
 const vuotoStorico = '<div class="vuoto">Nessun backtest disponibile: lancia il workflow «Backtest LGIM» da Actions.</div>';
 function mostra() {
   if (window._port) disegna(window._port);
@@ -275,11 +316,13 @@ function rendi() {
   const p = window._port, b = window._bt;
   if (p) { p.posizioni.concat(p.candidati).forEach(r => { if (r.isin) ISIN[r.ticker] = r.isin; }); disegna(p); }
   else $("#contenuto").innerHTML = '<div class="vuoto">Nessun dato disponibile: il workflow «Portafoglio LGIM» non è ancora stato eseguito.</div>';
+  if (window._cons) { window._cons.posizioni.forEach(r => { if (r.isin) ISIN[r.ticker] = r.isin; }); disegnaCons(window._cons); }
+  else $("#consigliato").innerHTML = '<div class="vuoto">Nessun dato disponibile: il workflow «Portafoglio LGIM» non ha ancora calcolato il Consigliato.</div>';
   if (b) storico(b); else $("#storico").innerHTML = vuotoStorico;
   if (window._sc) $("#storico").insertAdjacentHTML("beforeend", scomposizione(window._sc));
 }
-Promise.all([caricaJson("data/portafoglio.json").catch(() => null), caricaJson("data/backtest.json").catch(() => null), caricaJson("data/scomposizione.json").catch(() => null)]).then(([p, b, sc]) => {
-  window._port = p; window._bt = b; window._sc = sc; rendi();
+Promise.all([caricaJson("data/portafoglio.json").catch(() => null), caricaJson("data/backtest.json").catch(() => null), caricaJson("data/scomposizione.json").catch(() => null), caricaJson("data/consigliato.json").catch(() => null)]).then(([p, b, sc, cs]) => {
+  window._port = p; window._bt = b; window._sc = sc; window._cons = cs; rendi();
   // collegamenti a investing: la pagina non aspetta, si ridisegna quando arrivano (fino a 6 secondi)
   Promise.all([conTimeout(INV + "data/tech/index.json", 6000).then(d => d.righe.filter(r => r.det).map(r => r.ticker)).catch(() => null),
                conTimeout(INV + "investing_map.json", 6000).catch(() => ({}))]).then(([det, mappa]) => {
