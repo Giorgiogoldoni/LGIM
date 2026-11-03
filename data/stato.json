@@ -1,50 +1,50 @@
 {
  "versione": 2,
  "creato": "2026-10-15",
- "valore": 99.08013576699155,
+ "valore": 99.0774453320021,
  "posizioni": {
-  "ISPY.MI": {
-   "unita": 0.1880196676072996,
-   "prezzo": 44.51499938964844,
-   "ingresso": "2026-10-15"
-  },
-  "DOCT.MI": {
-   "unita": 0.5189968541422592,
-   "prezzo": 16.628000259399414,
-   "ingresso": "2026-10-26"
-  },
-  "SP1.MI": {
-   "unita": 1.516987458147391,
-   "prezzo": 10.697999954223633,
-   "ingresso": "2026-10-15"
-  },
   "XML4.DE": {
-   "unita": 0.6636123604549458,
-   "prezzo": 23.604999542236328,
-   "ingresso": "2026-10-15"
-  },
-  "LGJP.MI": {
-   "unita": 0.6221833350296244,
-   "prezzo": 18.56599998474121,
-   "ingresso": "2026-10-15"
-  },
-  "ECOM.MI": {
-   "unita": 0.45529524319771253,
-   "prezzo": 18.25200080871582,
+   "unita": 0.7617512396249022,
+   "prezzo": 23.8799991607666,
    "ingresso": "2026-10-15"
   },
   "LGGL.MI": {
-   "unita": 0.5876085761495626,
-   "prezzo": 24.625,
+   "unita": 0.5522217271202384,
+   "prezzo": 24.579999923706055,
    "ingresso": "2026-10-15"
   },
   "LGUS.MI": {
-   "unita": 0.571589521908936,
-   "prezzo": 27.739999771118164,
+   "unita": 0.4917974573506683,
+   "prezzo": 27.600000381469727,
+   "ingresso": "2026-10-15"
+  },
+  "RIEU.MI": {
+   "unita": 0.6383140550543063,
+   "prezzo": 19.992000579833984,
+   "ingresso": "2026-11-03"
+  },
+  "SP1.MI": {
+   "unita": 1.5160757029584204,
+   "prezzo": 10.697999954223633,
+   "ingresso": "2026-10-15"
+  },
+  "ISPY.MI": {
+   "unita": 0.17669284233420662,
+   "prezzo": 43.625,
+   "ingresso": "2026-10-15"
+  },
+  "DOCT.MI": {
+   "unita": 0.5138632117108095,
+   "prezzo": 17.15999984741211,
+   "ingresso": "2026-10-26"
+  },
+  "ECOM.MI": {
+   "unita": 0.4504998974834992,
+   "prezzo": 18.275999069213867,
    "ingresso": "2026-10-15"
   }
  },
- "ultimo_mensile": "2026-10",
+ "ultimo_mensile": "2026-11",
  "benchmark_base": {
   "IWMO.MI": 103.37999725341797,
   "VNGA80.MI": 45.0099983215332
@@ -81,9 +81,89 @@
    "IWMO.MI": 94.92,
    "VNGA80.MI": 98.53,
    "azione": "SETTIMANALE"
+  },
+  {
+   "data": "2026-11-03",
+   "dati_al": "2026-10-30",
+   "nav": 99.08,
+   "IWMO.MI": 93.97,
+   "VNGA80.MI": 98.4,
+   "azione": "MENSILE"
   }
  ],
  "storico": [
+  {
+   "data": "2026-11-03",
+   "dati_al": "2026-10-30",
+   "azione": "MENSILE",
+   "motivo": "ribilanciamento mensile al target",
+   "movimenti": [
+    {
+     "ticker": "DOCT.MI",
+     "nome": "L&G Healthcare Technology & Innovation UCITS ETF",
+     "azione": "RIDUCI",
+     "da": 9.0,
+     "a": 8.9,
+     "motivo": "mensile"
+    },
+    {
+     "ticker": "ECOM.MI",
+     "nome": "L&G ECOMMERCE LOGISTICS UCITS ETF",
+     "azione": "RIDUCI",
+     "da": 8.4,
+     "a": 8.3,
+     "motivo": "mensile"
+    },
+    {
+     "ticker": "ISPY.MI",
+     "nome": "L&G CYBER SECURITY UCITS ETF",
+     "azione": "RIDUCI",
+     "da": 8.3,
+     "a": 7.8,
+     "motivo": "mensile"
+    },
+    {
+     "ticker": "LGGL.MI",
+     "nome": "L&G GLOBAL EQUITY UCITS ETF",
+     "azione": "RIDUCI",
+     "da": 14.6,
+     "a": 13.7,
+     "motivo": "mensile"
+    },
+    {
+     "ticker": "LGJP.MI",
+     "nome": "L&G JAPAN EQUITY UCITS ETF",
+     "azione": "ESCE",
+     "da": 11.5,
+     "a": 0.0,
+     "motivo": "saldo medio non positivo"
+    },
+    {
+     "ticker": "LGUS.MI",
+     "nome": "L&G US EQUITY UCITS ETF",
+     "azione": "RIDUCI",
+     "da": 15.9,
+     "a": 13.7,
+     "motivo": "mensile"
+    },
+    {
+     "ticker": "RIEU.MI",
+     "nome": "L&G MSCI Europe Climate Pathway UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 12.9,
+     "motivo": "posizione 5 nella parte core"
+    },
+    {
+     "ticker": "XML4.DE",
+     "nome": "L&G UK Equity UCITS ETF",
+     "azione": "AUMENTA",
+     "da": 16.0,
+     "a": 18.4,
+     "motivo": "mensile"
+    }
+   ]
+  },
   {
    "data": "2026-10-26",
    "dati_al": "2026-10-23",
@@ -205,5 +285,5 @@
    ]
   }
  ],
- "ultima_esecuzione": "2026-10-26"
+ "ultima_esecuzione": "2026-11-03"
 }
