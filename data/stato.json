@@ -1,47 +1,42 @@
 {
  "versione": 2,
  "creato": "2026-10-15",
- "valore": 99.0774453320021,
+ "valore": 97.57475827315537,
  "posizioni": {
-  "XML4.DE": {
-   "unita": 0.7617512396249022,
-   "prezzo": 23.8799991607666,
-   "ingresso": "2026-10-15"
-  },
-  "LGGL.MI": {
-   "unita": 0.5522217271202384,
-   "prezzo": 24.579999923706055,
-   "ingresso": "2026-10-15"
-  },
-  "LGUS.MI": {
-   "unita": 0.4917974573506683,
-   "prezzo": 27.600000381469727,
+  "ECOM.MI": {
+   "unita": 0.45003480537225116,
+   "prezzo": 18.582000732421875,
    "ingresso": "2026-10-15"
   },
   "RIEU.MI": {
-   "unita": 0.6383140550543063,
-   "prezzo": 19.992000579833984,
+   "unita": 0.6376553307389288,
+   "prezzo": 19.917999267578125,
    "ingresso": "2026-11-03"
   },
+  "DOCT.MI": {
+   "unita": 0.5133331239543191,
+   "prezzo": 16.756000518798828,
+   "ingresso": "2026-10-26"
+  },
+  "LGAP.MI": {
+   "unita": 0.9435295307637405,
+   "prezzo": 16.11199951171875,
+   "ingresso": "2026-11-10"
+  },
+  "XML4.DE": {
+   "unita": 0.7609640562078679,
+   "prezzo": 23.770000457763672,
+   "ingresso": "2026-10-15"
+  },
   "SP1.MI": {
-   "unita": 1.5160757029584204,
+   "unita": 1.5145065531714137,
    "prezzo": 10.697999954223633,
    "ingresso": "2026-10-15"
   },
-  "ISPY.MI": {
-   "unita": 0.17669284233420662,
-   "prezzo": 43.625,
-   "ingresso": "2026-10-15"
-  },
-  "DOCT.MI": {
-   "unita": 0.5138632117108095,
-   "prezzo": 17.15999984741211,
-   "ingresso": "2026-10-26"
-  },
-  "ECOM.MI": {
-   "unita": 0.4504998974834992,
-   "prezzo": 18.275999069213867,
-   "ingresso": "2026-10-15"
+  "XEON.MI": {
+   "unita": 0.12220199873206164,
+   "prezzo": 150.71380615234375,
+   "ingresso": "2026-11-10"
   }
  },
  "ultimo_mensile": "2026-11",
@@ -89,9 +84,65 @@
    "IWMO.MI": 93.97,
    "VNGA80.MI": 98.4,
    "azione": "MENSILE"
+  },
+  {
+   "data": "2026-11-10",
+   "dati_al": "2026-11-06",
+   "nav": 97.57,
+   "IWMO.MI": 86.95,
+   "VNGA80.MI": 97.16,
+   "azione": "SETTIMANALE"
   }
  ],
  "storico": [
+  {
+   "data": "2026-11-10",
+   "dati_al": "2026-11-06",
+   "azione": "SETTIMANALE",
+   "motivo": "scostamento di almeno 5 punti su ISPY.MI, LGAP.MI, LGGL.MI, LGUS.MI",
+   "movimenti": [
+    {
+     "ticker": "ISPY.MI",
+     "nome": "L&G CYBER SECURITY UCITS ETF",
+     "azione": "ESCE",
+     "da": 7.2,
+     "a": 0.0,
+     "motivo": "saldo medio non positivo"
+    },
+    {
+     "ticker": "LGAP.MI",
+     "nome": "L&G ASIA PACIFIC EX JAPAN UCITS ETF",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 15.6,
+     "motivo": "posizione 2 nella parte core"
+    },
+    {
+     "ticker": "LGGL.MI",
+     "nome": "L&G GLOBAL EQUITY UCITS ETF",
+     "azione": "ESCE",
+     "da": 13.6,
+     "a": 0.0,
+     "motivo": "saldo medio non positivo"
+    },
+    {
+     "ticker": "LGUS.MI",
+     "nome": "L&G US EQUITY UCITS ETF",
+     "azione": "ESCE",
+     "da": 13.6,
+     "a": 0.0,
+     "motivo": "saldo medio non positivo"
+    },
+    {
+     "ticker": "XEON.MI",
+     "nome": "XEON.MI",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 18.9,
+     "motivo": "quota non assegnata"
+    }
+   ]
+  },
   {
    "data": "2026-11-03",
    "dati_al": "2026-10-30",
@@ -285,5 +336,5 @@
    ]
   }
  ],
- "ultima_esecuzione": "2026-11-03"
+ "ultima_esecuzione": "2026-11-10"
 }
