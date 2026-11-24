@@ -1,47 +1,37 @@
 {
  "versione": 2,
  "creato": "2026-10-15",
- "valore": 98.29065586970228,
+ "valore": 95.05179012638048,
  "posizioni": {
-  "RIEU.MI": {
-   "unita": 0.5590491454454795,
-   "prezzo": 20.43000030517578,
-   "ingresso": "2026-11-03"
-  },
-  "LGAP.MI": {
-   "unita": 0.6884740386904332,
-   "prezzo": 16.104000091552734,
-   "ingresso": "2026-11-10"
-  },
-  "XML4.DE": {
-   "unita": 0.5261595776548025,
-   "prezzo": 24.28499984741211,
-   "ingresso": "2026-10-15"
-  },
-  "LABL.MI": {
-   "unita": 0.6722962391161101,
-   "prezzo": 16.549999237060547,
-   "ingresso": "2026-11-17"
-  },
-  "RIUS.MI": {
-   "unita": 0.4471168230706602,
-   "prezzo": 24.885000228881836,
-   "ingresso": "2026-11-17"
-  },
   "SP1.MI": {
-   "unita": 1.5132240690792544,
+   "unita": 1.5116504376845774,
    "prezzo": 10.697999954223633,
    "ingresso": "2026-10-15"
   },
+  "DOCT.MI": {
+   "unita": 0.7215240885325886,
+   "prezzo": 15.937999725341797,
+   "ingresso": "2026-10-26"
+  },
+  "RIUS.MI": {
+   "unita": 0.6436096640138457,
+   "prezzo": 24.885000228881836,
+   "ingresso": "2026-11-17"
+  },
   "ECOM.MI": {
-   "unita": 0.6643100153491568,
-   "prezzo": 18.775999069213867,
+   "unita": 0.6636207266706116,
+   "prezzo": 17.95400047302246,
    "ingresso": "2026-10-15"
   },
-  "DOCT.MI": {
-   "unita": 0.7222766925408168,
-   "prezzo": 16.75200080871582,
-   "ingresso": "2026-10-26"
+  "RIEU.MI": {
+   "unita": 0.8363066041742865,
+   "prezzo": 20.389999389648438,
+   "ingresso": "2026-11-03"
+  },
+  "XEON.MI": {
+   "unita": 0.1484626213693218,
+   "prezzo": 150.86180114746094,
+   "ingresso": "2026-11-24"
   }
  },
  "ultimo_mensile": "2026-11",
@@ -105,9 +95,73 @@
    "IWMO.MI": 91.19,
    "VNGA80.MI": 98.79,
    "azione": "SETTIMANALE"
+  },
+  {
+   "data": "2026-11-24",
+   "dati_al": "2026-11-20",
+   "nav": 95.05,
+   "IWMO.MI": 83.3,
+   "VNGA80.MI": 93.87,
+   "azione": "SETTIMANALE"
   }
  ],
  "storico": [
+  {
+   "data": "2026-11-24",
+   "dati_al": "2026-11-20",
+   "azione": "SETTIMANALE",
+   "motivo": "scostamento di almeno 5 punti su LABL.MI, LGAP.MI, RIEU.MI, RIUS.MI, XML4.DE",
+   "movimenti": [
+    {
+     "ticker": "LABL.MI",
+     "nome": "L&G Global Brands UCITS ETF",
+     "azione": "ESCE",
+     "da": 10.9,
+     "a": 0.0,
+     "motivo": "saldo medio non positivo"
+    },
+    {
+     "ticker": "LGAP.MI",
+     "nome": "L&G ASIA PACIFIC EX JAPAN UCITS ETF",
+     "azione": "ESCE",
+     "da": 11.0,
+     "a": 0.0,
+     "motivo": "saldo medio non positivo"
+    },
+    {
+     "ticker": "RIEU.MI",
+     "nome": "L&G MSCI Europe Climate Pathway UCITS ETF",
+     "azione": "AUMENTA",
+     "da": 12.0,
+     "a": 17.9,
+     "motivo": "settimanale"
+    },
+    {
+     "ticker": "RIUS.MI",
+     "nome": "L&G US ESG Paris Aligned UCITS ETF",
+     "azione": "AUMENTA",
+     "da": 11.7,
+     "a": 16.9,
+     "motivo": "settimanale"
+    },
+    {
+     "ticker": "XEON.MI",
+     "nome": "XEON.MI",
+     "azione": "ENTRA",
+     "da": 0.0,
+     "a": 23.6,
+     "motivo": "quota non assegnata"
+    },
+    {
+     "ticker": "XML4.DE",
+     "nome": "L&G UK Equity UCITS ETF",
+     "azione": "ESCE",
+     "da": 12.8,
+     "a": 0.0,
+     "motivo": "saldo medio non positivo"
+    }
+   ]
+  },
   {
    "data": "2026-11-17",
    "dati_al": "2026-11-13",
@@ -421,5 +475,5 @@
    ]
   }
  ],
- "ultima_esecuzione": "2026-11-17"
+ "ultima_esecuzione": "2026-11-24"
 }
